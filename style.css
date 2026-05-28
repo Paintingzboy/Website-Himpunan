@@ -37,27 +37,30 @@ body {
 .font-montserrat { font-family: 'Montserrat', sans-serif; }
 
 /* ==========================================================================
-   2. NAVBAR FIX (Kembali ke Struktur Utama yang Stabil & Aman)
+   2. NAVBAR
    ========================================================================== */
 .navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
     position: fixed;
     width: 92%;
     max-width: 1280px;
     top: 25px;
     left: 50%;
     transform: translateX(-50%);
-    padding: 12px 35px;
-    border-radius: 50px;
-    z-index: 9999; /* Dipastikan selalu berada di lapisan paling atas */
-    
+    z-index: 1000;
     background: rgba(10, 42, 67, 0.4);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 50px;
     box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+    padding: 14px 30px; /* Diperlebar agar tidak mepet logo */
+}
+
+.nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
 }
 
 .logo-container {
@@ -67,11 +70,9 @@ body {
 }
 
 .logo-container .logo {
-    max-height: 55px;
+    height: 42px;
     width: auto;
-    height: auto;
     display: block;
-    max-width: 120px;
 }
 
 .logo-text {
@@ -97,7 +98,6 @@ body {
     margin-top: 4px;
 }
 
-/* Nav Menu Links */
 .nav-links {
     list-style: none;
     display: flex;
@@ -106,7 +106,7 @@ body {
 
 .nav-links > li {
     position: relative;
-    padding: 10px 14px; /* Dikembalikan ke ukuran ideal agar tidak merusak tinggi bar */
+    padding: 10px 14px; 
 }
 
 .nav-links a {
@@ -124,15 +124,10 @@ body {
 }
 
 .nav-links > li:hover > a,
-.nav-links a.active {
-    color: var(--accent-sky);
-}
+.nav-links a.active { color: var(--accent-sky); }
+.nav-links > li:hover i { transform: rotate(180deg); }
 
-.nav-links > li:hover i {
-    transform: rotate(180deg);
-}
-
-/* Dropdown Menu (Aman & Anti-Bug Luapan Kontainer) */
+/* Dropdown Menu */
 .dropdown-menu {
     position: absolute;
     top: 100%;
@@ -157,7 +152,7 @@ body {
 .dropdown:hover .dropdown-menu {
     opacity: 1;
     visibility: visible;
-    transform: translateX(-50%) translateY(5px); /* Menempel halus tanpa celah kosong */
+    transform: translateX(-50%) translateY(5px);
 }
 
 .dropdown-menu li a {
@@ -169,10 +164,7 @@ body {
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-.dropdown-menu li:last-child a {
-    border-bottom: none;
-}
-
+.dropdown-menu li:last-child a { border-bottom: none; }
 .dropdown-menu li a:hover {
     background: rgba(135, 206, 250, 0.15);
     color: var(--white);
@@ -239,22 +231,11 @@ body {
 }
 
 /* ==========================================================================
-   4. PROFIL SECTION & TIMELINE Sejarah
+   4. PROFIL SECTION & TIMELINE
    ========================================================================== */
 .profil-section {
     padding: 100px 20px 60px;
     background: linear-gradient(180deg, var(--primary-dark) 0%, #5B94B4 100%);
-}
-
-/* Highlight Utama Kabinet Poros Karya 2026 */
-.kabinet-grid .kabinet-current {
-    /* GANTI BARIS INI: Mulai dari kolom 2 dan merentang sepanjang 2 kolom */
-    grid-column: 2 / span 2; 
-    
-    background: linear-gradient(135deg, #FFFFFF 0%, #D4E5F0 100%);
-    padding: 24px 20px;
-    border: 2px solid rgba(27, 90, 125, 0.25);
-    box-shadow: 0 8px 25px rgba(0,0,0,0.12);
 }
 
 .container-bg {
@@ -300,7 +281,7 @@ body {
 .card-text p {
     font-size: 1rem;
     line-height: 1.8;
-    text-align: justify;
+    text-align: justify; /* Di desktop tetap justify, diubah di mobile */
     font-weight: 300;
 }
 
@@ -347,8 +328,14 @@ body {
     color: var(--accent-sky);
 }
 
+/* Highlight Kata Kunci Sejarah */
+.timeline-item p strong {
+    color: #E8F0F5;
+    font-weight: 600;
+}
+
 /* ==========================================================================
-   5. KABINET GRID (FIX: Versi Mini Background Gradient Poros Karya)
+   5. KABINET GRID
    ========================================================================== */
 .kabinet-grid {
     display: grid;
@@ -357,30 +344,35 @@ body {
     margin-top: 25px;
 }
 
-/* Kotak Kabinet Lama (Skala Kecil, Mengikuti Skema Warna Poros Karya) */
 .kabinet-item {
-    background: linear-gradient(135deg, #FFFFFF 0%, #D4E5F0 100%); /* Latar belakang sama dengan Poros Karya */
-    color: var(--primary-dark);
     border-radius: 14px;
-    padding: 15px 10px; /* Diperkecil agar hemat ruang */
+    padding: 15px 10px;
     text-align: center;
     transition: var(--transition-smooth);
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
 }
 
-.kabinet-item:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 22px rgba(0,0,0,0.15);
+/* UI/UX FIX: Efek Dimming untuk Kabinet Lama */
+.past-kabinet {
+    background: linear-gradient(135deg, #F8FAFC 0%, #E2E8F0 100%); /* Warna lebih redup dan flat */
+    color: var(--primary-dark);
+    opacity: 0.85; /* Dibuat sedikit transparan */
+    box-shadow: none;
+    border: 1px solid rgba(0,0,0,0.05);
 }
 
-/* Gambar/Icon Placeholder yang Dikecilkan Sesuai Request */
+.past-kabinet:hover {
+    opacity: 1;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
 .placeholder-img {
-    width: 38px;   /* Diperkecil menyesuaikan kotak */
-    height: 38px;  /* Diperkecil menyesuaikan kotak */
+    width: 38px;
+    height: 38px;
     background: rgba(27, 90, 125, 0.12);
     border-radius: 50%;
     margin-bottom: 10px;
@@ -396,25 +388,25 @@ body {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    font-size: 0.85rem; /* Icon diperkecil mengikuti gambar */
+    font-size: 0.85rem;
 }
 
 .kabinet-item h4 {
-    font-size: 1.05rem; /* Tulisan nama ketua dibuat lebih kecil */
+    font-size: 1.05rem;
     color: var(--primary-dark);
     margin-bottom: 4px;
     font-weight: 700;
 }
 
 .kabinet-item .ketua {
-    font-size: 0.8rem; /* Tulisan jabatan dibuat lebih kecil */
+    font-size: 0.8rem;
     font-weight: 600;
     color: var(--primary-blue);
     margin-bottom: 2px;
 }
 
 .kabinet-item .nama-kabinet {
-    font-size: 0.72rem; /* Tulisan nama kabinet diperkecil */
+    font-size: 0.72rem;
     color: #444;
     font-weight: 700;
     min-height: 28px;
@@ -425,38 +417,36 @@ body {
 }
 
 .kabinet-item .periode {
-    font-size: 0.65rem; /* Tulisan tahun/periode diperkecil */
+    font-size: 0.65rem;
     color: #666;
     margin-top: 4px;
     font-style: italic;
 }
 
-/* Highlight Utama Kabinet Poros Karya 2026 (Tetap Lebih Besar) */
+/* Highlight Utama Kabinet Poros Karya 2026 */
 .kabinet-grid .kabinet-current {
-    grid-column: 1 / -1;
-    min-height: 360px;
+    grid-column: 2 / span 2; /* Menempatkannya di tengah pada grid 4 kolom */
     background: linear-gradient(135deg, #FFFFFF 0%, #D4E5F0 100%);
-    padding: 32px 30px;
+    padding: 24px 20px;
     border: 2px solid rgba(27, 90, 125, 0.25);
-    box-shadow: 0 10px 30px rgba(0,0,0,0.14);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    opacity: 1; /* Pastikan selalu menyala */
+    transform: scale(1.02); /* Sedikit diperbesar dari yang lain */
 }
 
 .logo-kabinet {
-    height: 90px;
-    margin-bottom: 18px;
+    height: 55px;
+    margin-bottom: 10px;
     object-fit: contain;
 }
 
-.kabinet-current h4 { font-size: 1.8rem; }
-.kabinet-current .ketua { font-size: 1.25rem; }
-.kabinet-current .nama-kabinet { font-size: 1.1rem; }
-.kabinet-current .periode { font-size: 0.95rem; }
-.kabinet-current {
-    gap: 12px;
-}
+.kabinet-current h4 { font-size: 1.35rem; }
+.kabinet-current .ketua { font-size: 1rem; }
+.kabinet-current .nama-kabinet { font-size: 0.88rem; }
+.kabinet-current .periode { font-size: 0.75rem; }
 
 /* ==========================================================================
-   6. REVISI B: VISI & MISI (Paper Card Style)
+   6. VISI & MISI (Paper Card Style)
    ========================================================================== */
 .visi-misi-section {
     padding: 90px 20px;
@@ -584,19 +574,28 @@ footer p {
 }
 
 /* ==========================================================================
-   8. RESPONSIVE DESIGN
+   8. RESPONSIVE DESIGN & UI/UX MOBILE FIXES
    ========================================================================== */
 @media screen and (max-width: 1024px) {
     .kabinet-grid { grid-template-columns: repeat(3, 1fr); }
-    .kabinet-grid .kabinet-current { grid-column: span 3; }
+    /* Pastikan di tablet, Poros Karya melebar penuh, bukan lagi nempel di kolom 2 */
+    .kabinet-grid .kabinet-current { grid-column: span 3; } 
+    
     .visi-misi-section { grid-template-columns: 1fr; gap: 45px; }
     .poros-header { grid-column: span 1; }
+    
+    /* UI FIX: Matikan rotasi kertas di perangkat kecil agar tidak patah */
     .paper-card { transform: none !important; }
 }
 
 @media screen and (max-width: 912px) {
     .navbar { padding: 12px 20px; }
+    
+    /* UI FIX: Beri padding dalam nav-container agar hamburger ada ruang */
+    .nav-container { padding: 0 5px; } 
+    
     .hamburger { display: block; }
+    
     .nav-links {
         position: absolute;
         top: 115%;
@@ -612,6 +611,7 @@ footer p {
     }
     .nav-links.active { display: flex; animation: slideInDown 0.3s ease forwards; }
     .nav-links > li { margin: 8px 0; padding: 0; width: 100%; text-align: center; }
+    
     .dropdown-menu {
         position: static;
         transform: none !important;
@@ -625,22 +625,34 @@ footer p {
         display: none;
     }
     .dropdown:hover .dropdown-menu { display: block; }
+    
     .row-layout { flex-direction: column; }
     .card-video { width: 100%; }
+
+    /* UI FIX: Teks rata kiri untuk pembacaan nyaman di layar kecil */
+    .card-text p, .timeline-item p { text-align: left !important; }
 }
 
 @media screen and (max-width: 600px) {
-    .navbar { width: 94%; }
+    .navbar { width: 94%; padding: 15px 20px; }
     .logo-text { display: none; }
     .hero-content h1 { font-size: 3rem; }
     .hero-content h2 { font-size: 1.15rem; }
+    
     .container-bg { padding: 25px 15px; }
     .section-title { font-size: 2.2rem; }
     .card { padding: 25px 15px; }
-    .timeline { margin-left: 8px; padding-left: 18px; }
-    .timeline-item .dot { left: -25px; }
+    
+    /* UI FIX: Spasi Timeline ditarik sedikit menjauh dari tepi layar */
+    .timeline { 
+        margin-left: 15px; 
+        padding-left: 25px; 
+    }
+    .timeline-item .dot { left: -32px; }
+    
     .kabinet-grid { grid-template-columns: repeat(2, 1fr); }
     .kabinet-grid .kabinet-current { grid-column: span 2; }
+    
     .poros-header h2 { font-size: 2rem; }
     footer { flex-direction: column; gap: 12px; padding: 20px; }
 }
@@ -648,31 +660,5 @@ footer p {
 @keyframes slideInDown {
     from { opacity: 0; transform: translateY(-10px); }
     to { opacity: 1; transform: translateY(0); }
-}
-
-.navbar {
-    position: fixed;
-    width: 92%;
-    max-width: 1280px;
-    top: 25px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 1000;
-    background: rgba(10, 42, 67, 0.4);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    border-radius: 50px;
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
-    
-    /* GANTI BARIS INI: Beri ruang atas-bawah 14px dan kanan-kiri 30px */
-    padding: 14px 30px; 
-}
-
-/* Flex Container baru di dalam HTML */
-.nav-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-}
+   }
+                          
