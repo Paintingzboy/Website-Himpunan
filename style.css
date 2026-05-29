@@ -289,17 +289,20 @@ body {
     border-radius: 24px;
     padding: 40px;
     margin-bottom: 35px;
-    color: var(--white);
+    color: var(--primary-dark);
 }
 
 .gradient-bg {
-     background: linear-gradient(135deg, #072B4D 0%, #072B4D 30%, #006B84 100%);
+    background: #FFFFFF;
+    border: 1px solid rgba(27, 90, 125, 0.1);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
 }
 
 .card h3 {
     font-size: 1.75rem;
     margin-bottom: 25px;
     text-align: center;
+    color: var(--primary-blue);
 }
 
 .row-layout {
@@ -312,8 +315,9 @@ body {
 .card-text p {
     font-size: 1rem;
     line-height: 1.8;
-    text-align: justify; /* Di desktop tetap justify, diubah di mobile */
-    font-weight: 300;
+    text-align: justify;
+    font-weight: 400;
+    color: #444;
 }
 
 .card-video {
@@ -332,7 +336,7 @@ body {
 
 /* Timeline */
 .timeline {
-    border-left: 2px dashed rgba(255, 255, 255, 0.4);
+    border-left: 2px dashed rgba(27, 90, 125, 0.35);
     margin-left: 25px;
     padding-left: 30px;
 }
@@ -348,21 +352,28 @@ body {
     top: 6px;
     width: 12px;
     height: 12px;
-    background: var(--accent-sky);
-    border: 2px solid var(--white);
+    background: var(--primary-blue);
+    border: 2px solid #fff;
     border-radius: 50%;
+    box-shadow: 0 0 0 3px rgba(27,90,125,0.2);
 }
 
 .timeline-item h4 {
     font-size: 1.4rem;
     margin-bottom: 5px;
-    color: var(--accent-sky);
+    color: var(--primary-blue);
+}
+
+.timeline-item p {
+    color: #555;
+    font-size: 0.95rem;
+    line-height: 1.7;
 }
 
 /* Highlight Kata Kunci Sejarah */
 .timeline-item p strong {
-    color: #E8F0F5;
-    font-weight: 600;
+    color: var(--primary-dark);
+    font-weight: 700;
 }
 
 /* ==========================================================================
@@ -1109,4 +1120,375 @@ body.bg-dark {
 
 @media screen and (max-width: 480px) {
     .modul-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
+}
+
+/* ==========================================================================
+   9. CUTTING MAT OVERLAY (Hero Top)
+   ========================================================================== */
+.cutting-mat-overlay {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+    overflow: hidden;
+}
+
+/* Horizontal lines — 50px pitch so cells are square */
+.cm-lines-h {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 280px;
+    background-image: repeating-linear-gradient(
+        to bottom,
+        rgba(255,255,255,0.18) 0px,
+        rgba(255,255,255,0.18) 1.5px,
+        transparent 1.5px,
+        transparent 50px
+    );
+    -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,0.9) 0%, transparent 100%);
+    mask-image: linear-gradient(to bottom, rgba(0,0,0,0.9) 0%, transparent 100%);
+    animation: cmSlideDown 1.2s ease-out both;
+}
+
+/* Vertical lines — same 50px pitch to form perfect squares */
+.cm-lines-v {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 280px;
+    background-image: repeating-linear-gradient(
+        to right,
+        rgba(255,255,255,0.13) 0px,
+        rgba(255,255,255,0.13) 1.5px,
+        transparent 1.5px,
+        transparent 50px
+    );
+    -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, transparent 100%);
+    mask-image: linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, transparent 100%);
+    animation: cmSlideDown 1.2s ease-out 0.1s both;
+}
+
+/* Corner ruler marks */
+.cm-corner {
+    position: absolute;
+    top: 0;
+    width: 60px;
+    height: 60px;
+    border-color: rgba(255,255,255,0.35);
+    border-style: solid;
+    border-width: 0;
+    animation: cmCornerIn 0.8s cubic-bezier(0.22,1,0.36,1) 0.4s both;
+}
+.cm-corner--tl { left: 0;  border-top-width: 2px; border-left-width: 2px;  }
+.cm-corner--tr { right: 0; border-top-width: 2px; border-right-width: 2px; }
+
+@keyframes cmSlideDown {
+    from { opacity: 0; transform: translateY(-30px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes cmCornerIn {
+    from { opacity: 0; transform: scale(0.5); }
+    to   { opacity: 1; transform: scale(1); }
+}
+
+/* ==========================================================================
+   10. HERO ANIMATIONS (Logo + Text)
+   ========================================================================== */
+/* Logo floats in from the left */
+.hero-anim-logo {
+    animation: heroLogoIn 1s cubic-bezier(0.22,1,0.36,1) 0.15s both;
+}
+@keyframes heroLogoIn {
+    from { opacity: 0; transform: translateX(-60px) rotate(-6deg) scale(0.85); }
+    to   { opacity: 1; transform: translateX(0)    rotate(0deg)   scale(1); }
+}
+
+/* Each hero text element slides & fades up */
+.hero-word-reveal {
+    opacity: 0;
+    animation: heroWordUp 0.75s cubic-bezier(0.22,1,0.36,1) both;
+}
+@keyframes heroWordUp {
+    from { opacity: 0; transform: translateY(28px) skewY(2deg); }
+    to   { opacity: 1; transform: translateY(0)     skewY(0deg); }
+}
+
+/* ==========================================================================
+   11. FLOW WORD ANIMATION (section headings on scroll)
+   ========================================================================== */
+/* Words are hidden by default until their container gets .flow-active */
+.flow-container { overflow: visible; }
+
+.flow-container .flow-word {
+    display: inline-block;
+    opacity: 0;
+    transform: translateY(20px) skewX(-5deg);
+    transition: none; /* driven by CSS animation, not transition */
+}
+
+.flow-container.flow-active .flow-word {
+    animation: flowWordIn 0.55s cubic-bezier(0.22,1,0.36,1) both;
+}
+
+@keyframes flowWordIn {
+    from { opacity: 0; transform: translateY(22px) skewX(-8deg); }
+    to   { opacity: 1; transform: translateY(0)     skewX(0deg); }
+}
+
+/* ==========================================================================
+   12. SCROLL REVEAL (general)
+   ========================================================================== */
+[data-scroll-reveal] {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.65s ease, transform 0.65s cubic-bezier(0.22,1,0.36,1);
+}
+[data-scroll-reveal].revealed {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* ==========================================================================
+   13. KABINET POP-IN
+   ========================================================================== */
+.kabinet-item {
+    opacity: 0;
+    transform: scale(0.85) translateY(12px);
+    transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.34,1.56,0.64,1);
+}
+.kabinet-item.kabinet-revealed {
+    opacity: 1 !important;
+    transform: scale(1) translateY(0) !important;
+}
+/* Override the existing hover & current styles to work after reveal */
+.kabinet-grid .kabinet-current.kabinet-revealed {
+    transform: scale(1.02) translateY(0) !important;
+}
+.past-kabinet.kabinet-revealed:hover {
+    transform: translateY(-3px) !important;
+}
+
+/* ==========================================================================
+   14. TIMELINE SLIDE-IN
+   ========================================================================== */
+.timeline-item[data-scroll-reveal] {
+    opacity: 0;
+    transform: translateX(-28px);
+    transition: opacity 0.55s ease var(--tl-delay, 0ms),
+                transform 0.55s cubic-bezier(0.22,1,0.36,1) var(--tl-delay, 0ms);
+}
+.timeline-item[data-scroll-reveal].revealed {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* ==========================================================================
+   15. ASPIRASI SECTION
+   ========================================================================== */
+.aspirasi-section {
+    position: relative;
+    background: linear-gradient(160deg, #072B4D 0%, #0A3D5C 50%, #1B5A7D 100%);
+    padding: 100px 20px 80px;
+    overflow: hidden;
+}
+
+/* Subtle grid lines background (like cutting mat but darker) */
+.aspirasi-bg-lines {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-image:
+        repeating-linear-gradient(to bottom, rgba(255,255,255,0.04) 0px, rgba(255,255,255,0.04) 1px, transparent 1px, transparent 30px),
+        repeating-linear-gradient(to right,  rgba(255,255,255,0.03) 0px, rgba(255,255,255,0.03) 1px, transparent 1px, transparent 60px);
+}
+
+.aspirasi-container {
+    max-width: 780px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 2;
+}
+
+/* Header */
+.aspirasi-header {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.aspirasi-label {
+    display: inline-block;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 4px;
+    color: var(--accent-sky);
+    border: 1px solid rgba(135,206,250,0.4);
+    border-radius: 20px;
+    padding: 5px 18px;
+    margin-bottom: 16px;
+    text-transform: uppercase;
+}
+
+.aspirasi-title {
+    font-size: 3rem;
+    color: var(--white);
+    margin-bottom: 14px;
+    line-height: 1.1;
+}
+
+.aspirasi-sub {
+    font-size: 1rem;
+    color: rgba(255,255,255,0.65);
+    line-height: 1.7;
+    max-width: 520px;
+    margin: 0 auto;
+}
+
+/* Form */
+.aspirasi-form {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.12);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-radius: 24px;
+    padding: 44px 48px;
+    transition: opacity 0.4s ease;
+}
+
+.form-group {
+    margin-bottom: 22px;
+}
+
+.form-label {
+    display: block;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: rgba(255,255,255,0.7);
+    margin-bottom: 8px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+.form-input {
+    width: 100%;
+    padding: 14px 18px;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.18);
+    border-radius: 12px;
+    color: var(--white);
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.95rem;
+    outline: none;
+    transition: border-color 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
+    appearance: none;
+    -webkit-appearance: none;
+}
+
+.form-input::placeholder { color: rgba(255,255,255,0.3); }
+
+.form-input:focus {
+    border-color: var(--accent-sky);
+    background: rgba(135,206,250,0.07);
+    box-shadow: 0 0 0 3px rgba(135,206,250,0.18);
+}
+
+.form-select option { background: #0A2A43; color: var(--white); }
+
+.form-textarea {
+    resize: vertical;
+    min-height: 130px;
+}
+
+/* Form action buttons */
+.form-actions {
+    display: flex;
+    gap: 14px;
+    margin-top: 10px;
+}
+
+.btn-kirim {
+    flex: 1;
+    padding: 15px 30px;
+    background: linear-gradient(135deg, var(--light-blue), var(--primary-blue));
+    color: var(--white);
+    border: none;
+    border-radius: 12px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 18px rgba(27,90,125,0.45);
+}
+
+.btn-kirim:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(27,90,125,0.6);
+}
+
+.btn-kirim:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.btn-reset {
+    padding: 15px 22px;
+    background: transparent;
+    color: rgba(255,255,255,0.55);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 12px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+}
+
+.btn-reset:hover {
+    color: var(--white);
+    border-color: rgba(255,255,255,0.4);
+    background: rgba(255,255,255,0.07);
+}
+
+/* Success message */
+.form-success {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    padding: 30px;
+    text-align: center;
+    color: var(--white);
+    font-size: 1.1rem;
+    font-weight: 600;
+    font-family: 'Montserrat', sans-serif;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    flex-direction: column;
+}
+.form-success i {
+    font-size: 3rem;
+    color: #4ADE80;
+    animation: checkPop 0.6s cubic-bezier(0.34,1.56,0.64,1) both;
+}
+@keyframes checkPop {
+    from { transform: scale(0); opacity: 0; }
+    to   { transform: scale(1); opacity: 1; }
+}
+
+/* Responsive */
+@media screen and (max-width: 768px) {
+    .aspirasi-form { padding: 28px 22px; }
+    .aspirasi-title { font-size: 2.2rem; }
+    .form-actions { flex-direction: column; }
+    .btn-reset { justify-content: center; }
+}
+
+@media screen and (max-width: 480px) {
+    .aspirasi-title { font-size: 1.8rem; }
+    .cm-corner { width: 40px; height: 40px; }
 }
