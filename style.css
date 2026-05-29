@@ -190,44 +190,75 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    text-align: center;
     color: var(--white);
     padding: 0 20px;
 }
 
-.hero-content h1 {
-    font-size: 5rem;
+/* Modifikasi kontainer agar menggunakan Flexbox (menyamping) */
+.hero-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 60px; /* Jarak antara logo dan teks */
+    max-width: 1200px;
+    width: 100%;
+    margin-top: 40px; /* Menurunkan sedikit agar tidak tertutup navbar */
+}
+
+/* Styling untuk logo besar di samping */
+.hero-large-logo {
+    width: 380px; /* Sesuaikan ukurannya agar proporsional dengan gambar */
+    height: auto;
+    filter: drop-shadow(0 10px 25px rgba(0,0,0,0.3)); /* Efek bayangan agar logo lebih menonjol */
+}
+
+/* Memastikan susunan teks tetap rapi */
+.hero-text {
+    text-align: center; 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.hero-text h1 {
+    font-size: 5.5rem; /* Menyesuaikan ukuran H1 seperti pada gambar */
     margin-bottom: 8px;
-    text-transform: uppercase;
+    text-transform: capitalize; /* Mengubah teks menjadi Himatekins (huruf besar di awal saja) */
     text-shadow: 0 4px 10px rgba(0,0,0,0.25);
 }
 
-.hero-content h2 {
+.hero-text h2 {
     font-size: 1.65rem;
     font-weight: 400;
     line-height: 1.4;
-    margin-bottom: 30px;
+    margin-bottom: 25px;
     color: rgba(255, 255, 255, 0.9);
 }
 
+.hero-text p {
+    font-size: 1.05rem;
+    font-weight: 300;
+    line-height: 1.7;
+    margin-top: 15px; /* Memberi jarak antara teks bawah dengan icon social media */
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.social-icons {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    margin: 10px 0;
+}
+
 .social-icons a {
-    color: var(--white);
-    font-size: 1.9rem;
-    margin: 0 12px;
-    display: inline-block;
+    color: #ffffff;
+    font-size: 1.75rem;
     transition: var(--transition-smooth);
 }
 
 .social-icons a:hover {
     color: var(--accent-sky);
-    transform: translateY(-4px);
-}
-
-.hero-content p {
-    font-size: 1.05rem;
-    font-weight: 300;
-    line-height: 1.7;
-    color: rgba(255, 255, 255, 0.8);
+    transform: translateY(-3px);
 }
 
 /* ==========================================================================
@@ -630,6 +661,16 @@ footer p {
     .row-layout { flex-direction: column; }
     .card-video { width: 100%; }
 
+    .hero-content {
+        flex-direction: column;
+        gap: 25px;
+        margin-top: 80px;
+    }
+    
+    .hero-large-logo {
+        width: 240px; /* Logo diperkecil agar tidak memakan ruang penuh */
+    }
+
     /* UI FIX: Teks rata kiri untuk pembacaan nyaman di layar kecil */
     .card-text p, .timeline-item p { text-align: left !important; }
 }
@@ -662,6 +703,14 @@ footer p {
     .section-title { font-size: 2.2rem; }
     .card { padding: 25px 15px; }
     
+    .hero-large-logo {
+        width: 180px; /* Di HP dikecilkan lagi */
+    }
+    
+    .hero-text h1 { 
+        font-size: 3rem; 
+    }
+
     /* UI FIX: Spasi Timeline ditarik sedikit menjauh dari tepi layar */
     .timeline { 
         margin-left: 15px; 
@@ -699,7 +748,7 @@ body.bg-dark {
     display: flex;
     align-items: center;
     justify-content: center;
-    min-height: 500px; /* <-- KITA TAMBAH TINGGINYA AGAR LEBIH LEGA */
+    min-height: 800px; /* <-- KITA TAMBAH TINGGINYA AGAR LEBIH LEGA */
 }
 
 .layanan-hero-content {
@@ -725,7 +774,7 @@ body.bg-dark {
     position: absolute;
     bottom: -00px; /* <-- KITA TURUNKAN DRASTIS (Sebelumnya -10px) */
     z-index: 1;
-    width: 480px; 
+    width: 500px; 
     height: auto;
     object-fit: contain;
     
@@ -735,7 +784,8 @@ body.bg-dark {
 }
 
 .piala-left {
-    left: -20px;
+    left: 0px;
+    width: 600px; /* diperbesar sedikit untuk Piala */
 }
 
 .medali-right {
