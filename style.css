@@ -262,7 +262,7 @@ body {
 }
 
 .gradient-bg {
-    background: linear-gradient(135deg, var(--primary-blue) 0%, var(--light-blue) 100%);
+     background: linear-gradient(135deg, #072B4D 0%, #072B4D 30%, #006B84 100%);
 }
 
 .card h3 {
