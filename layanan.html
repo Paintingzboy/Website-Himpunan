@@ -9,9 +9,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
-<body class="bg-dark">
+<body class="bg-dark"> <!-- Tambahan class bg-dark khusus untuk page ini -->
 
-    <nav class="navbar">
+    <!-- NAVBAR (Mirip index, tapi link dimodifikasi) -->
+  <nav class="navbar">
         <div class="nav-container">
             <div class="logo-container">
                 <img src="Assets/Logo%20Himatekins.png" alt="Logo Himatekins" class="logo">
@@ -63,21 +64,29 @@
     </nav>
 
     <header class="layanan-hero">
+        <img src="Assets/Piala.png" alt="Tangan Piala" class="hero-ornament piala-left">
+        <img src="Assets/Medali.png" alt="Tangan Medali" class="hero-ornament medali-right">
+        
         <div class="layanan-hero-content">
             <h1 class="font-amidone">Layanan<br>Mahasiswa</h1>
             <p class="font-montserrat">Temukan berbagai informasi seputar Beasiswa, Karir, dan perlombaan akademik maupun non-akademik.</p>
         </div>
     </header>
 
+        <!-- MAIN CONTENT -->
     <main class="layanan-main">
         
+        <!-- SECTION: BEASISWA -->
         <section class="layanan-container" id="info-beasiswa">
             <h2 class="font-amidone">Info Beasiswa</h2>
             <div class="search-bar-wrapper">
                 <input type="text" class="search-input font-montserrat" placeholder="Cari Beasiswa...">
                 <button class="search-btn font-montserrat">Cari Beasiswa</button>
             </div>
+            
+            <!-- Tempat kartu akan di-generate oleh JavaScript -->
             <div class="info-grid" id="grid-beasiswa">
+                <!-- Contoh Placeholder Kartu Kosong (Seperti di desain) -->
                 <div class="info-card-placeholder"></div>
                 <div class="info-card-placeholder"></div>
                 <div class="info-card-placeholder"></div>
@@ -85,12 +94,14 @@
             </div>
         </section>
 
+        <!-- SECTION: LOMBA -->
         <section class="layanan-container" id="info-lomba">
-            <h2 class="font-amidone">Info Lomba / Kompetisi</h2>
+            <h2 class="font-amidone">Info Lomba</h2>
             <div class="search-bar-wrapper">
                 <input type="text" class="search-input font-montserrat" placeholder="Cari Lomba...">
                 <button class="search-btn font-montserrat">Cari Lomba</button>
             </div>
+            
             <div class="info-grid" id="grid-lomba">
                 <div class="info-card-placeholder"></div>
                 <div class="info-card-placeholder"></div>
@@ -99,12 +110,14 @@
             </div>
         </section>
 
+        <!-- SECTION: MAGANG -->
         <section class="layanan-container" id="info-magang">
-            <h2 class="font-amidone">Karir, Magang & MBKM</h2>
+            <h2 class="font-amidone">Info Magang</h2>
             <div class="search-bar-wrapper">
-                <input type="text" class="search-input font-montserrat" placeholder="Cari Magang/Karir...">
+                <input type="text" class="search-input font-montserrat" placeholder="Cari Magang...">
                 <button class="search-btn font-montserrat">Cari Magang</button>
             </div>
+            
             <div class="info-grid" id="grid-magang">
                 <div class="info-card-placeholder"></div>
                 <div class="info-card-placeholder"></div>
@@ -115,6 +128,7 @@
 
     </main>
 
+    <!-- FOOTER -->
     <footer>
         <p class="font-montserrat">&copy; 2026 HIMATEKINS ITS</p>
         <div class="footer-icons">
@@ -122,7 +136,8 @@
         </div>
     </footer>
 
-    <script>
+</body>
+<script>
         const hamburger = document.getElementById('hamburger-toggle');
         const navMenu = document.getElementById('nav-menu');
 
@@ -131,4 +146,5 @@
         });
     </script>
 </body>
+</html>
 </html>
