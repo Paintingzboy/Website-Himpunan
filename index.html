@@ -38,8 +38,8 @@
                 <li class="dropdown">
                     <a href="akademik.html">Akademik & Riset <i class="fas fa-chevron-down"></i></a>
                     <ul class="dropdown-menu">
-                        <li><a href="akademik.html#profil-laboratorium">Profil Laboratorium</a></li>
-                        <li><a href="akademik.html#modul-template">Modul & Templete Laporan Praktikum</a></li>
+                        <li><a href="akademik.html#profil-laboratorium">Profil Laboratorium & Riset</a></li>
+                        <li><a href="akademik.html#modul-template">Modul & SOP Lab</a></li>
                     </ul>
                 </li>
                 <li class="dropdown">
@@ -63,20 +63,28 @@
     </nav>
 
    <header class="hero" id="home">
+        <!-- Cutting Mat Grid Lines Overlay -->
+        <div class="cutting-mat-overlay" aria-hidden="true">
+            <div class="cm-lines-h"></div>
+            <div class="cm-lines-v"></div>
+            <div class="cm-corner cm-corner--tl"></div>
+            <div class="cm-corner cm-corner--tr"></div>
+        </div>
+
         <div class="hero-content">
-            <img src="Assets/LOGO HIMATEKINS.png" alt="Logo Himatekins Besar" class="hero-large-logo">
+            <img src="Assets/LOGO HIMATEKINS.png" alt="Logo Himatekins Besar" class="hero-large-logo hero-anim-logo">
             
             <div class="hero-text">
-                <h1 class="font-amidone">Himatekins</h1>
-                <h2 class="font-montserrat">Himpunan Mahasiswa<br>Teknik Instrumentasi</h2>
+                <h1 class="font-amidone hero-word-reveal">Himatekins</h1>
+                <h2 class="font-montserrat hero-word-reveal" style="animation-delay:0.35s">Himpunan Mahasiswa<br>Teknik Instrumentasi</h2>
                 
-                <div class="social-icons">
+                <div class="social-icons hero-word-reveal" style="animation-delay:0.55s">
                     <a href="https://instagram.com/himatekins_its" target="_blank"><i class="fab fa-instagram"></i></a>
                     <a href="https://youtube.com/" target="_blank"><i class="fab fa-youtube"></i></a>
                     <a href="https://linkedin.com/" target="_blank"><i class="fab fa-linkedin"></i></a>
                 </div>
                 
-                <p class="font-montserrat">Selamat datang di website resmi Himpunan<br>
+                <p class="font-montserrat hero-word-reveal" style="animation-delay:0.75s">Selamat datang di website resmi Himpunan<br>
                    Mahasiswa Teknik Instrumentasi<br>
                    Institut Teknologi Sepuluh Nopember Surabaya</p>
             </div>
@@ -85,34 +93,34 @@
 
     <main class="profil-section" id="profil">
         <div class="container-bg">
-            <h2 class="section-title font-amidone">Profil</h2>
+            <h2 class="section-title font-amidone" data-anim="fade-up">Profil</h2>
 
-            <section class="card gradient-bg" id="tentang-kami">
+            <section class="card gradient-bg" id="tentang-kami" data-anim="fade-up" data-delay="100">
                 <h3 class="font-amidone">TENTANG KAMI</h3>
                 <div class="row-layout">
-                    <div class="card-text">
+                    <div class="card-text" data-anim="fade-left" data-delay="200">
                         <p>Himpunan Mahasiswa Teknik Instrumentasi (HIMATEKINS) merupakan organisasi mahasiswa tingkat departemen di lingkungan Institut Teknologi Sepuluh Nopember (ITS). HIMATEKINS adalah wadah resmi bagi mahasiswa Teknik Instrumentasi untuk berorganisasi, mengembangkan keprofesian, dan mengabdi kepada masyarakat.</p>
                     </div>
-                    <div class="card-video">
+                    <div class="card-video" data-anim="fade-right" data-delay="300">
                         <iframe width="100%" height="220" src="https://www.youtube.com/embed/xomxcOO2vrk" title="Himatekins Profile Video" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                     </div>
                 </div>
             </section>
 
-            <section class="card gradient-bg" id="sejarah">
+            <section class="card gradient-bg" id="sejarah" data-anim="fade-up">
                 <h3 class="font-amidone">SEJARAH</h3>
                 <div class="timeline">
-                    <div class="timeline-item">
+                    <div class="timeline-item" data-anim="fade-left" data-delay="100">
                         <div class="dot"></div>
                         <h4>1995</h4>
                         <p>Awal berdirinya <strong>D3 Teknik Instrumentasi</strong> di bawah naungan Jurusan Teknik Fisika ITS.</p>
                     </div>
-                    <div class="timeline-item">
+                    <div class="timeline-item" data-anim="fade-left" data-delay="200">
                         <div class="dot"></div>
                         <h4>2011</h4>
                         <p>Perubahan nama program studi menjadi <strong>D3 Metrologi dan Instrumentasi</strong> guna menyesuaikan dengan tuntutan dan perkembangan kebutuhan pasar industri nasional.</p>
                     </div>
-                    <div class="timeline-item">
+                    <div class="timeline-item" data-anim="fade-left" data-delay="300">
                         <div class="dot"></div>
                         <h4>2017</h4>
                         <p><strong>Berpisah secara resmi dari Teknik Fisika</strong> dan berdiri sendiri secara mandiri berdasarkan PERREK PTNBH sehingga Teknik Instrumentasi resmi menjadi Departemen baru di bawah naungan Fakultas Vokasi ITS. Momen ini juga menandai awal mula terbentuknya organisasi <strong>HIMATEKINS ITS</strong> secara berdaulat pada tanggal <strong>23 Mei 2017</strong>.</p>
@@ -120,67 +128,67 @@
                 </div>
             </section>
 
-            <section class="card gradient-bg" id="kabinet">
+            <section class="card gradient-bg" id="kabinet" data-anim="fade-up">
                 <h3 class="font-amidone">KABINET</h3>
                 <div class="kabinet-grid">
                     
-                    <div class="kabinet-item past-kabinet">
+                    <div class="kabinet-item past-kabinet" data-anim="zoom-in" data-delay="100">
                         <img src="Assets/HIMATEKINS SATU.png" alt="Logo Kabinet Satu" class="logo-kabinet">
                         <p class="ketua">Ayung</p>
                         <p class="nama-kabinet">HIMATEKINS SATU</p>
                         <p class="periode">2017</p>
                     </div>
 
-                    <div class="kabinet-item past-kabinet">
+                    <div class="kabinet-item past-kabinet" data-anim="zoom-in" data-delay="150">
                         <img src="Assets/HIMATEKINS DIMENSI.png" alt="Logo Kabinet Dimensi" class="logo-kabinet">
                         <p class="ketua">Alim</p>
                         <p class="nama-kabinet">HIMATEKINS DIMENSI</p>
                         <p class="periode">2018</p>
                     </div>
 
-                    <div class="kabinet-item past-kabinet">
+                    <div class="kabinet-item past-kabinet" data-anim="zoom-in" data-delay="200">
                         <img src="Assets/HIMATEKINS KARSA.png" alt="Logo Kabinet Karsa" class="logo-kabinet">
                         <p class="ketua">Amrin</p>
                         <p class="nama-kabinet">HIMATEKINS KARSA</p>
                         <p class="periode">2019</p>
                     </div>
 
-                    <div class="kabinet-item past-kabinet">
+                    <div class="kabinet-item past-kabinet" data-anim="zoom-in" data-delay="250">
                         <img src="Assets/HIMATEKINS MAKARYA.png" alt="Logo Kabinet Makarya" class="logo-kabinet">
                         <p class="ketua">Agil</p>
                         <p class="nama-kabinet">HIMATEKINS MAKARYA</p>
                         <p class="periode">2021</p>
                     </div>
 
-                    <div class="kabinet-item past-kabinet">
+                    <div class="kabinet-item past-kabinet" data-anim="zoom-in" data-delay="300">
                         <img src="Assets/HIMATEKINS ARKA.png" alt="Logo Kabinet Arka" class="logo-kabinet">
                         <p class="ketua">Ervin</p>
                         <p class="nama-kabinet">HIMATEKINS ARKA</p>
                         <p class="periode">2022</p>
                     </div>
 
-                    <div class="kabinet-item past-kabinet">
+                    <div class="kabinet-item past-kabinet" data-anim="zoom-in" data-delay="350">
                         <img src="Assets/HIMATEKINS SANCAKApng.png" alt="Logo Kabinet Sancaka" class="logo-kabinet">
                         <p class="ketua">Herdina</p>
                         <p class="nama-kabinet">HIMATEKINS SANCAKA</p>
                         <p class="periode">2023</p>
                     </div>
 
-                    <div class="kabinet-item past-kabinet">
+                    <div class="kabinet-item past-kabinet" data-anim="zoom-in" data-delay="400">
                         <img src="Assets/HIMATEKINS ASTHA BRATA.png" alt="Logo Kabinet Astha Brata" class="logo-kabinet">
                         <p class="ketua">Dzulkief</p>
                         <p class="nama-kabinet">HIMATEKINS ASTHA BRATA</p>
                         <p class="periode">2024</p>
                     </div>
 
-                    <div class="kabinet-item past-kabinet">
+                    <div class="kabinet-item past-kabinet" data-anim="zoom-in" data-delay="450">
                         <img src="Assets/Harmoni Aksi.png" alt="Logo Kabinet Harmoni Aksi" class="logo-kabinet">
                         <p class="ketua">Riandy</p>
                         <p class="nama-kabinet">HIMATEKINS HARMONI AKSI</p>
                         <p class="periode">2025</p>
                     </div>
 
-                    <div class="kabinet-item kabinet-current">
+                    <div class="kabinet-item kabinet-current" data-anim="zoom-in" data-delay="500">
                         <img src="Assets/Logo%20Poros%20Karya.png" alt="Logo Kabinet Poros Karya" class="logo-kabinet">
                         <h4 class="font-amidone">2026</h4>
                         <p class="ketua font-montserrat">Yusuf Aldi</p>
@@ -218,6 +226,55 @@
         </div>
     </section>
 
+    <!-- ===== ASPIRASI SECTION ===== -->
+    <section class="aspirasi-section" id="aspirasi">
+        <div class="aspirasi-bg-lines" aria-hidden="true"></div>
+        <div class="aspirasi-container">
+            <div class="aspirasi-header" data-scroll-reveal>
+                <span class="aspirasi-label">ASPIRASI</span>
+                <h2 class="font-amidone aspirasi-title">Sampaikan Suara Anda</h2>
+                <p class="font-montserrat aspirasi-sub">Kami ada untuk mendengar. Aspirasi, kritik, dan saran Anda adalah bahan bakar gerak Himatekins.</p>
+            </div>
+
+            <form class="aspirasi-form" id="aspirasi-form" onsubmit="handleAspirasi(event)" data-scroll-reveal data-delay="150">
+                <div class="form-group">
+                    <label class="form-label font-montserrat" for="asp-nama">Nama Lengkap</label>
+                    <input class="form-input" type="text" id="asp-nama" name="nama" placeholder="Nama kamu..." required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label font-montserrat" for="asp-email">Alamat Email (opsional)</label>
+                    <input class="form-input" type="email" id="asp-email" name="email" placeholder="email@example.com">
+                </div>
+                <div class="form-group">
+                    <label class="form-label font-montserrat" for="asp-kategori">Kategori</label>
+                    <select class="form-input form-select" id="asp-kategori" name="kategori">
+                        <option value="">-- Pilih Kategori --</option>
+                        <option value="akademik">Akademik</option>
+                        <option value="organisasi">Organisasi &amp; Kegiatan</option>
+                        <option value="fasilitas">Fasilitas</option>
+                        <option value="lainnya">Lainnya</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label font-montserrat" for="asp-pesan">Pesan / Aspirasi</label>
+                    <textarea class="form-input form-textarea" id="asp-pesan" name="pesan" placeholder="Tulis aspirasimu di sini..." required></textarea>
+                </div>
+                <div class="form-actions">
+                    <button class="btn-kirim font-montserrat" type="submit" id="btn-kirim-aspirasi">
+                        <i class="fas fa-paper-plane"></i> Kirim Aspirasi
+                    </button>
+                    <button class="btn-reset font-montserrat" type="reset" id="btn-reset-aspirasi">
+                        <i class="fas fa-undo"></i> Reset
+                    </button>
+                </div>
+                <div class="form-success" id="form-success" hidden>
+                    <i class="fas fa-check-circle"></i>
+                    <span>Terima kasih! Aspirasi Anda telah diterima.</span>
+                </div>
+            </form>
+        </div>
+    </section>
+
     <footer>
         <p class="font-montserrat">&copy; 2026 HIMATEKINS ITS</p>
         <div class="footer-icons">
@@ -228,12 +285,86 @@
     </footer>
 
     <script>
+        /* ---- Hamburger ---- */
         const hamburger = document.getElementById('hamburger-toggle');
         const navMenu = document.getElementById('nav-menu');
+        hamburger.addEventListener('click', () => { navMenu.classList.toggle('active'); });
 
-        hamburger.addEventListener('click', () => {
-            navMenu.classList.toggle('active');
+        /* ---- Scroll Reveal (general) ---- */
+        const srObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const delay = entry.target.dataset.delay || 0;
+                    setTimeout(() => entry.target.classList.add('revealed'), Number(delay));
+                    srObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.15 });
+        document.querySelectorAll('[data-scroll-reveal]').forEach(el => srObserver.observe(el));
+
+        /* ---- Per-word / logo flow animation for slide-in sections ---- */
+        function splitAndAnimate(selector) {
+            document.querySelectorAll(selector).forEach(el => {
+                if (el.dataset.split) return;
+                el.dataset.split = '1';
+                const words = el.innerText.split(' ');
+                el.innerHTML = words.map((w, i) =>
+                    `<span class="flow-word" style="animation-delay:${i * 0.08 + 0.1}s">${w}&nbsp;</span>`
+                ).join('');
+            });
+        }
+
+        const flowObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('flow-active');
+                    flowObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.2 });
+
+        /* Apply flow animation to section headings and card titles */
+        document.querySelectorAll('.section-title, .card h3, .paper-card h3, .poros-header h2, .aspirasi-title').forEach(el => {
+            el.classList.add('flow-container');
+            flowObserver.observe(el);
         });
+
+        /* Kabinet logo reveal: staggered pop-in */
+        const kabinetObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.querySelectorAll('.kabinet-item').forEach((item, idx) => {
+                        setTimeout(() => item.classList.add('kabinet-revealed'), idx * 60);
+                    });
+                    kabinetObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+        const kabinetGrid = document.querySelector('.kabinet-grid');
+        if (kabinetGrid) kabinetObserver.observe(kabinetGrid);
+
+        /* Timeline items reveal */
+        document.querySelectorAll('.timeline-item').forEach((item, idx) => {
+            item.style.setProperty('--tl-delay', `${idx * 180}ms`);
+            srObserver.observe(item);
+            item.dataset.scrollReveal = '';
+        });
+
+        /* Aspirasi form submit */
+        function handleAspirasi(e) {
+            e.preventDefault();
+            const btn = document.getElementById('btn-kirim-aspirasi');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Mengirim...';
+            setTimeout(() => {
+                document.getElementById('aspirasi-form').style.opacity = '0';
+                setTimeout(() => {
+                    document.getElementById('aspirasi-form').hidden = true;
+                    document.getElementById('form-success').hidden = false;
+                    document.getElementById('form-success').style.opacity = '1';
+                }, 400);
+            }, 1200);
+        }
     </script>
 </body>
     </html>
