@@ -680,4 +680,161 @@ footer p {
     from { opacity: 0; transform: translateY(-10px); }
     to { opacity: 1; transform: translateY(0); }
    }
-                          
+
+/* ==========================================================================
+   HALAMAN LAYANAN MAHASISWA
+   ========================================================================== */
+
+/* Background full navy untuk body di halaman layanan */
+body.bg-dark {
+    background-color: #072B4D; 
+}
+
+/* Hero Section Layanan */
+.layanan-hero {
+    padding: 160px 20px 80px; 
+    text-align: center;
+    color: var(--white);
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 500px; /* <-- KITA TAMBAH TINGGINYA AGAR LEBIH LEGA */
+}
+
+.layanan-hero-content {
+    position: relative;
+    z-index: 2; /* Memastikan teks judul selalu berada di atas gambar */
+}
+
+.layanan-hero h1 {
+    font-size: 3.5rem;
+    line-height: 1.1;
+    margin-bottom: 15px;
+}
+
+.layanan-hero p {
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.85);
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* Styling Khusus Ornamen Gambar Kiri Kanan */
+.hero-ornament {
+    position: absolute;
+    bottom: -00px; /* <-- KITA TURUNKAN DRASTIS (Sebelumnya -10px) */
+    z-index: 1;
+    width: 480px; 
+    height: auto;
+    object-fit: contain;
+    
+    /* Gradient mask tetap dipertahankan agar bawahnya halus */
+    -webkit-mask-image: linear-gradient(to bottom, black 65%, transparent 100%);
+    mask-image: linear-gradient(to bottom, black 65%, transparent 100%);
+}
+
+.piala-left {
+    left: -20px;
+}
+
+.medali-right {
+    right: -20px;
+}
+
+/* Container Putih Besar */
+.layanan-main {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 20px 60px;
+}
+
+.layanan-container {
+    background-color: #F8FAFC; 
+    border-radius: 40px;
+    padding: 50px;
+    margin-bottom: 40px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+}
+
+.layanan-container h2 {
+    color: #072B4D;
+    text-align: center;
+    font-size: 2rem;
+    margin-bottom: 30px;
+}
+
+/* Search Bar Area */
+.search-bar-wrapper {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 40px;
+}
+
+.search-input {
+    flex: 1;
+    padding: 15px 25px;
+    border-radius: 12px;
+    border: none;
+    background-color: #E2E8F0;
+    color: #333;
+    font-size: 1rem;
+    outline: none;
+}
+
+.search-input::placeholder {
+    color: #94A3B8;
+}
+
+.search-btn {
+    padding: 15px 30px;
+    border-radius: 12px;
+    border: none;
+    background-color: #072B4D;
+    color: var(--white);
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.search-btn:hover {
+    background-color: #1B5A7D;
+}
+
+/* Grid Layout untuk Kotak-Kotak */
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 25px;
+}
+
+.info-card-placeholder {
+    background-color: #EBE5E5; 
+    height: 180px;
+    border-radius: 15px;
+    width: 100%;
+}
+
+/* Responsivitas Mobile Layanan */
+@media screen and (max-width: 912px) {
+    .layanan-hero h1 { font-size: 2.8rem; }
+    .hero-ornament { 
+        width: 250px; 
+        opacity: 0.5; 
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .layanan-hero h1 { font-size: 2.5rem; }
+    .layanan-container { padding: 30px 20px; border-radius: 25px; }
+    .search-bar-wrapper { flex-direction: column; gap: 10px; }
+    .info-grid { grid-template-columns: 1fr; }
+}
+
+@media screen and (max-width: 600px) {
+    .hero-ornament { 
+        width: 150px; 
+        opacity: 0.3; 
+    }
+}
