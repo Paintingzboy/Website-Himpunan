@@ -636,7 +636,22 @@ footer p {
 
 @media screen and (max-width: 600px) {
     .navbar { width: 94%; padding: 15px 20px; }
-    .logo-text { display: none; }
+    
+/* Tampilkan kembali teks logo dan sesuaikan ukurannya untuk HP */
+    .logo-text { 
+        display: flex; 
+    }
+    .brand-title { 
+        font-size: 1.05rem; /* Diperkecil sedikit */
+    }
+    .brand-subtitle { 
+        font-size: 0.5rem; /* Diperkecil agar tidak kepanjangan */
+        margin-top: 2px;
+    }
+    .logo-container .logo { 
+        height: 34px; /* Logo disesuaikan agar seimbang dengan teks */
+    }
+
     .hero-content h1 { font-size: 3rem; }
     .hero-content h2 { font-size: 1.15rem; }
 
