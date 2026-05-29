@@ -465,6 +465,7 @@ body {
 
 .logo-poros {
     height: 100px;
+    max-width: 100%; /* TAMBAHKAN BARIS INI */
     object-fit: contain;
     margin-bottom: 12px;
 }
@@ -638,6 +639,9 @@ footer p {
     .logo-text { display: none; }
     .hero-content h1 { font-size: 3rem; }
     .hero-content h2 { font-size: 1.15rem; }
+
+    .visi-misi-section { padding: 60px 15px; }
+    .paper-card { padding: 25px 20px; }
     
     .container-bg { padding: 25px 15px; }
     .section-title { font-size: 2.2rem; }
