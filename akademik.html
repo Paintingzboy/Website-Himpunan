@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Akademik & Riset - HIMATEKINS ITS</title>
+    <link rel="icon" href="Assets/LOGO HIMATEKINS.png" type="image/png" sizes="any">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-dark">
+
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo-container">
+                <img src="Assets/LOGO HIMATEKINS.png" alt="Logo Himatekins" class="logo">
+                <div class="logo-text">
+                    <span class="brand-title">HIMATEKINS</span>
+                    <span class="brand-subtitle">Himpunan Mahasiswa Teknik Instrumentasi</span>
+                </div>
+            </div>
+
+            <div class="hamburger" id="hamburger-toggle">
+                <i class="fas fa-bars"></i>
+            </div>
+
+            <ul class="nav-links" id="nav-menu">
+                <li><a href="index.html#home">Home</a></li>
+                <li class="dropdown">
+                    <a href="index.html#profil">Profil <i class="fas fa-chevron-down"></i></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="index.html#tentang-kami">Tentang Kami</a></li>
+                        <li><a href="index.html#sejarah">Sejarah</a></li>
+                        <li><a href="index.html#kabinet">Kabinet</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a href="#" class="active">Akademik & Riset <i class="fas fa-chevron-down"></i></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#profil-laboratorium">Profil Laboratorium & Riset</a></li>
+                        <li><a href="#modul-template">Modul & SOP Lab</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a href="layanan.html">Layanan Mahasiswa <i class="fas fa-chevron-down"></i></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="layanan.html#info-beasiswa">Info Beasiswa</a></li>
+                        <li><a href="layanan.html#info-lomba">Info Lomba</a></li>
+                        <li><a href="layanan.html#info-magang">Info Magang</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a href="index.html#kabar">Kabar Himpunan <i class="fas fa-chevron-down"></i></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="index.html#berita">Berita & Rilis</a></li>
+                        <li><a href="index.html#kegiatan">Dokumentasi Kegiatan</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <header class="akademik-hero">
+        <div class="akademik-hero-content">
+            <h1 class="font-amidone">Akademik<br>& Riset</h1>
+            <p class="font-montserrat">Temukan berbagai informasi menenai Beasiswa, lomba untuk mahasiswa, Magang, Karir.</p>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="akademik-main">
+
+        <!-- SECTION: PROFIL LABORATORIUM -->
+        <section class="akademik-container" id="profil-laboratorium">
+            <h2 class="font-amidone">Profil Laboratorium</h2>
+
+            <!-- Lab 1: ICL -->
+            <div class="lab-card">
+                <div class="lab-header">
+                    <img src="Assets/Logo ICL.png" alt="Logo ICL" class="lab-logo">
+                    <h3 class="font-amidone">Instrumentation and Control Laboratory</h3>
+                </div>
+                <p class="lab-desc font-montserrat">
+                    Instrumentasi Pengendalian (Instrumentation & Control Lab) adalah salah satu lab utama di departemen teknik instrumentasi dengan fokus bidang instrumentasi dan perkembangannya meliputi manufacturing, desain, hingga aplikasi serta mengembangkan system pengendalian (basic process control system dan advance control system) yang support dengan digital system, cyber physical dan distributed system.
+                </p>
+            </div>
+
+            <!-- Lab 2: Measurement -->
+            <div class="lab-card">
+                <div class="lab-header">
+                    <img src="Assets/Logo Measurement.png" alt="Logo Measurement Lab" class="lab-logo">
+                    <h3 class="font-amidone">Measurement Laboratory</h3>
+                </div>
+                <p class="lab-desc font-montserrat">
+                    Laboratorium ini berfokus pada teknik pengukuran dan akuisisi data. Mahasiswa belajar menggunakan berbagai sensor dan alat ukur seperti oscilloscope, multimeter, serta sensor suhu, tekanan, dan aliran. Selain itu, dipelajari juga proses kalibrasi dan pengolahan data untuk memastikan hasil pengukuran yang akurat.
+                </p>
+            </div>
+
+            <!-- Lab 3: SIS -->
+            <div class="lab-card">
+                <div class="lab-header">
+                    <img src="Assets/Logo SIS.png" alt="Logo SIS Lab" class="lab-logo">
+                    <h3 class="font-amidone">Safety Instrumented System Laboratory</h3>
+                </div>
+                <p class="lab-desc font-montserrat">
+                    Laboratorium ini mempelajari sistem keselamatan dalam industri, khususnya Safety Instrumented System (SIS). Fokusnya adalah bagaimana merancang sistem proteksi seperti emergency shutdown (ESD) untuk mencegah kecelakaan akibat kegagalan proses. Mahasiswa juga dikenalkan dengan analisis risiko dan standar keselamatan industri.
+                </p>
+            </div>
+
+            <!-- Lab 4: Electronic -->
+            <div class="lab-card">
+                <div class="lab-header">
+                    <img src="Assets/Logo Electronic.png" alt="Logo Electronic Lab" class="lab-logo">
+                    <h3 class="font-amidone">Electronic Laboratory</h3>
+                </div>
+                <p class="lab-desc font-montserrat">
+                    Laboratorium ini berfokus pada dasar hingga lanjutan elektronika, baik analog maupun digital. Mahasiswa mempelajari perancangan rangkaian, penggunaan komponen elektronik, hingga pengembangan sistem berbasis mikrokontroler seperti Arduino atau embedded system. Praktikum meliputi perakitan, pengujian, dan analisis rangkaian elektronik.
+                </p>
+            </div>
+
+        </section>
+
+        <!-- SECTION: MODUL & TEMPLATE LAPORAN -->
+        <section class="akademik-container" id="modul-template">
+            <h2 class="font-amidone">Modul & Template Laporan</h2>
+
+            <!-- Sub-section: Modul Praktikum -->
+            <div class="modul-subsection">
+                <h3 class="font-amidone modul-subtitle">Modul praktikum</h3>
+
+                <div class="search-bar-wrapper">
+                    <input type="text" id="search-modul" class="search-input font-montserrat" placeholder="Cari Praktikum">
+                    <button class="search-btn font-montserrat" onclick="filterCards('modul')">Cari Modul...</button>
+                </div>
+
+                <div class="modul-grid" id="grid-modul">
+                    <div class="modul-card">
+                        <div class="modul-img-wrap">
+                            <img src="Assets/Modul ICL.png" alt="Modul ICL" class="modul-img">
+                        </div>
+                    </div>
+                    <div class="modul-card">
+                        <div class="modul-img-wrap">
+                            <img src="Assets/Modul Measurement.png" alt="Modul Measurement" class="modul-img">
+                        </div>
+                    </div>
+                    <div class="modul-card">
+                        <div class="modul-img-wrap">
+                            <img src="Assets/Modul SIS.png" alt="Modul SIS" class="modul-img">
+                        </div>
+                    </div>
+                    <div class="modul-card">
+                        <div class="modul-img-wrap">
+                            <img src="Assets/Modul Electronic.png" alt="Modul Electronic" class="modul-img">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sub-section: Template Laporan -->
+            <div class="modul-subsection" style="margin-top: 50px;">
+                <h3 class="font-amidone modul-subtitle">Template laporan praktikum</h3>
+
+                <div class="modul-grid" id="grid-template">
+                    <div class="modul-card template-card">
+                        <p class="template-label font-montserrat">Template Laporan<br><strong>Instrumentation & Control Lab</strong></p>
+                        <div class="modul-img-wrap">
+                            <img src="Assets/Template ICL.png" alt="Template ICL" class="modul-img">
+                        </div>
+                        <a href="Assets/Template_Laporan_ICL.docx" download class="download-btn font-montserrat">
+                            <i class="fas fa-download"></i> Download
+                        </a>
+                    </div>
+                    <div class="modul-card template-card">
+                        <p class="template-label font-montserrat">Template Laporan<br><strong>Measurement Laboratory</strong></p>
+                        <div class="modul-img-wrap">
+                            <img src="Assets/Template Measurement.png" alt="Template Measurement" class="modul-img">
+                        </div>
+                        <a href="Assets/Template_Laporan_Measurement.docx" download class="download-btn font-montserrat">
+                            <i class="fas fa-download"></i> Download
+                        </a>
+                    </div>
+                    <div class="modul-card template-card">
+                        <p class="template-label font-montserrat">Template Laporan<br><strong>Safety Instrumented System Lab</strong></p>
+                        <div class="modul-img-wrap">
+                            <img src="Assets/Template SIS.png" alt="Template SIS" class="modul-img">
+                        </div>
+                        <a href="Assets/Template_Laporan_SIS.docx" download class="download-btn font-montserrat">
+                            <i class="fas fa-download"></i> Download
+                        </a>
+                    </div>
+                    <div class="modul-card template-card">
+                        <p class="template-label font-montserrat">Template Laporan<br><strong>Electronic Laboratory</strong></p>
+                        <div class="modul-img-wrap">
+                            <img src="Assets/Template Electronic.png" alt="Template Electronic" class="modul-img">
+                        </div>
+                        <a href="Assets/Template_Laporan_Electronic.docx" download class="download-btn font-montserrat">
+                            <i class="fas fa-download"></i> Download
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer>
+        <p class="font-montserrat">&copy; 2026 HIMATEKINS ITS</p>
+        <div class="footer-icons">
+            <a href="https://tiktok.com/" target="_blank"><i class="fab fa-tiktok"></i></a>
+            <a href="https://youtube.com/" target="_blank"><i class="fab fa-youtube"></i></a>
+            <a href="https://instagram.com/himatekins_its" target="_blank"><i class="fab fa-instagram"></i></a>
+        </div>
+    </footer>
+
+    <script>
+        // Hamburger toggle
+        const hamburger = document.getElementById('hamburger-toggle');
+        const navMenu = document.getElementById('nav-menu');
+        hamburger.addEventListener('click', () => {
+            navMenu.classList.toggle('active');
+        });
+
+        // Search filter for modul
+        function filterCards(type) {
+            const query = document.getElementById('search-' + type).value.toLowerCase();
+            const cards = document.querySelectorAll('#grid-' + type + ' .modul-card');
+            cards.forEach(card => {
+                const alt = card.querySelector('img') ? card.querySelector('img').alt.toLowerCase() : '';
+                card.style.display = alt.includes(query) ? '' : 'none';
+            });
+        }
+
+        document.getElementById('search-modul').addEventListener('keyup', () => filterCards('modul'));
+    </script>
+</body>
+</html>
