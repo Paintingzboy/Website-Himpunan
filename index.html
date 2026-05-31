@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Himatekins ITS - Official Website</title>
+    <link rel="icon" href="Assets/LOGO HIMATEKINS.png" type="image/png" sizes="any">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- ===================== NAVBAR ===================== -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo-container">
+                <img src="Assets/LOGO HIMATEKINS.png" alt="Logo Himatekins" class="logo">
+                <div class="logo-text">
+                    <span class="brand-title">HIMATEKINS</span>
+                    <span class="brand-subtitle">Himpunan Mahasiswa Teknik Instrumentasi</span>
+                </div>
+            </div>
+
+            <div class="hamburger" id="hamburger-toggle">
+                <i class="fas fa-bars"></i>
+            </div>
+
+            <ul class="nav-links" id="nav-menu">
+                <li><a href="#home">Home</a></li>
+                <li class="dropdown">
+                    <a href="#tentang-kami" class="active">Profil <i class="fas fa-chevron-down"></i></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#tentang-kami">Tentang Kami</a></li>
+                        <li><a href="#sejarah">Sejarah</a></li>
+                        <li><a href="#kabinet">Kabinet & Poros Karya</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a href="akademik.html">Akademik & Riset <i class="fas fa-chevron-down"></i></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="akademik.html#profil-laboratorium">Profil Laboratorium & Riset</a></li>
+                        <li><a href="akademik.html#modul-template">Modul & SOP Lab</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a href="layanan.html">Layanan Mahasiswa <i class="fas fa-chevron-down"></i></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="layanan.html#info-beasiswa">Info Beasiswa</a></li>
+                        <li><a href="layanan.html#info-lomba">Info Lomba</a></li>
+                        <li><a href="layanan.html#info-magang">Info Magang</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a href="#kabar">Kabar Himpunan <i class="fas fa-chevron-down"></i></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#berita">Berita & Rilis</a></li>
+                        <li><a href="#kegiatan">Dokumentasi Kegiatan</a></li>
+                    </ul>
+                </li>
+                <li><a href="#aspirasi">Aspirasi</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- ===================== HERO ===================== -->
+    <header class="hero" id="home">
+        <!-- Cutting mat overlay yang pudar ke bawah -->
+        <div class="hero-cutting-mat"></div>
+        <div class="hero-content">
+            <img src="Assets/LOGO HIMATEKINS.png" alt="Logo Himatekins Besar" class="hero-large-logo"
+                data-anim="fade-right">
+            <div class="hero-text">
+                <div class="hero-brand-badge" data-anim="fade-up" data-delay="50">
+                    <span class="hero-himatekins-title font-amidone">HIMATEKINS</span>
+                </div>
+                <div class="hero-subtitle-tag" data-anim="fade-up" data-delay="150">
+                    <span class="font-montserrat">Himpunan Mahasiswa Teknik Instrumentasi</span>
+                </div>
+                <div class="social-icons" data-anim="fade-up" data-delay="300">
+                    <a href="https://instagram.com/himatekins_its" target="_blank"><i class="fab fa-instagram"></i></a>
+                    <a href="https://youtube.com/" target="_blank"><i class="fab fa-youtube"></i></a>
+                    <a href="https://linkedin.com/" target="_blank"><i class="fab fa-linkedin"></i></a>
+                </div>
+                <p class="font-montserrat hero-desc" data-anim="fade-up" data-delay="400">Selamat datang di website
+                    resmi Himpunan<br>
+                    Mahasiswa Teknik Instrumentasi<br>
+                    Institut Teknologi Sepuluh Nopember Surabaya</p>
+            </div>
+        </div>
+
+        <!-- Wave Divider between Hero and Main Content -->
+        <div class="wave-divider">
+            <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120"
+                preserveAspectRatio="none">
+                <path
+                    d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z"
+                    fill="#FFFFFF"></path>
+            </svg>
+        </div>
+    </header>
+
+    <!-- ===================== MAIN CONTENT ===================== -->
+    <main class="home-main">
+
+        <!-- ROW: TENTANG KAMI + SEJARAH BERSEBELAHAN -->
+        <div class="tentang-sejarah-row">
+
+            <!-- BOX 1: TENTANG KAMI -->
+            <section class="home-box tentang-box" id="tentang-kami" data-anim="fade-up">
+                <h3 class="box-title font-amidone">TENTANG KAMI</h3>
+                <p class="font-montserrat tentang-desc" data-anim="fade-up" data-delay="100">Himpunan Mahasiswa Teknik
+                    Instrumentasi (HIMATEKINS) merupakan organisasi mahasiswa tingkat departemen di lingkungan Institut
+                    Teknologi Sepuluh Nopember (ITS). HIMATEKINS adalah wadah resmi bagi mahasiswa Teknik Instrumentasi
+                    untuk berorganisasi, mengembangkan keprofesian, dan mengabdi kepada masyarakat.</p>
+                <div class="card-video tentang-video" data-anim="fade-up" data-delay="200">
+                    <iframe width="100%" height="200" src="https://www.youtube.com/embed/xomxcOO2vrk"
+                        title="Himatekins Profile Video" frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen></iframe>
+                </div>
+            </section>
+
+            <!-- BOX 2: SEJARAH -->
+            <section class="home-box sejarah-box" id="sejarah" data-anim="fade-up" data-delay="100">
+                <h3 class="box-title font-amidone sejarah-title">SEJARAH</h3>
+                <div class="sejarah-gradient-box">
+                    <div class="timeline">
+                        <div class="timeline-item" data-anim="fade-left" data-delay="100">
+                            <div class="dot dot-light"></div>
+                            <h4 class="tl-year">1995</h4>
+                            <p class="tl-text">Awal berdirinya <strong>D3 Teknik Instrumentasi</strong> di bawah naungan
+                                Jurusan Teknik Fisika ITS.</p>
+                        </div>
+                        <div class="timeline-item" data-anim="fade-left" data-delay="200">
+                            <div class="dot dot-light"></div>
+                            <h4 class="tl-year">2011</h4>
+                            <p class="tl-text">Perubahan nama menjadi <strong>D3 Metrologi dan Instrumentasi</strong>
+                                guna menyesuaikan tuntutan industri nasional.</p>
+                        </div>
+                        <div class="timeline-item" data-anim="fade-left" data-delay="300">
+                            <div class="dot dot-light"></div>
+                            <h4 class="tl-year">2017</h4>
+                            <p class="tl-text"><strong>Berpisah dari Teknik Fisika</strong> dan berdiri sendiri secara
+                                mandiri berdasarkan PERREK PTNBH sehingga Teknik Instrumentasi resmi menjadi Departemen
+                                baru di bawah naungan Fakultas Vokasi ITS. Momen ini juga menandai awal mula
+                                terbentuknya organisasi. <strong>HIMATEKINS ITS</strong> resmi berdaulat pada <strong>23
+                                    Mei 2017</strong>.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+
+        <!-- BOX 3: KABINET + POROS KARYA -->
+        <section class="kabinet-section" id="kabinet" data-anim="fade-up">
+            <h3 class="kabinet-section-title font-amidone">KABINET</h3>
+
+            <div class="kabinet-grid-wrapper">
+                <div class="kabinet-grid">
+                    <!-- Past Kabinets Row 1 -->
+                    <div class="kabinet-item past-kabinet" data-anim="zoom-in" data-delay="100">
+                        <img src="Assets/HIMATEKINS SATU.png" alt="Logo Kabinet Satu" class="logo-kabinet"
+                            style="height: 60px; object-fit: contain; margin-bottom: 10px;">
+                        <p class="tl-year-box">2017</p>
+                        <div class="box-bottom">
+                            <p class="nama-kabinet">HIMATEKINS SATU</p>
+                            <p class="periode">Kepengurusan ke-1</p>
+                        </div>
+                    </div>
+                    <div class="kabinet-item past-kabinet" data-anim="zoom-in" data-delay="150">
+                        <img src="Assets/HIMATEKINS DIMENSI.png" alt="Logo Kabinet Dimensi" class="logo-kabinet"
+                            style="height: 60px; object-fit: contain; margin-bottom: 10px;">
+                        <p class="tl-year-box">2018</p>
+                        <div class="box-bottom">
+                            <p class="nama-kabinet">HIMATEKINS DIMENSI</p>
+                            <p class="periode">Kepengurusan ke-2</p>
+                        </div>
+                    </div>
+                    <div class="kabinet-item past-kabinet" data-anim="zoom-in" data-delay="200">
+                        <img src="Assets/HIMATEKINS KARSA.png" alt="Logo Kabinet Karsa" class="logo-kabinet"
+                            style="height: 60px; object-fit: contain; margin-bottom: 10px;">
+                        <p class="tl-year-box">2019</p>
+                        <div class="box-bottom">
+                            <p class="nama-kabinet">HIMATEKINS KARSA</p>
+                            <p class="periode">Kepengurusan ke-3</p>
+                        </div>
+                    </div>
+                    <div class="kabinet-item past-kabinet" data-anim="zoom-in" data-delay="250">
+                        <img src="Assets/HIMATEKINS MAKARYA.png" alt="Logo Kabinet Makarya" class="logo-kabinet"
+                            style="height: 60px; object-fit: contain; margin-bottom: 10px;">
+                        <p class="tl-year-box">2021</p>
+                        <div class="box-bottom">
+                            <p class="nama-kabinet">HIMATEKINS MAKARYA</p>
+                            <p class="periode">Kepengurusan ke-4</p>
+                        </div>
+                    </div>
+
+                    <!-- Past Kabinets Row 2 -->
+                    <div class="kabinet-item past-kabinet" data-anim="zoom-in" data-delay="300">
+                        <img src="Assets/HIMATEKINS ARKA.png" alt="Logo Kabinet Arka" class="logo-kabinet"
+                            style="height: 60px; object-fit: contain; margin-bottom: 10px;">
+                        <p class="tl-year-box">2022</p>
+                        <div class="box-bottom">
+                            <p class="nama-kabinet">HIMATEKINS ARKA</p>
+                            <p class="periode">Kepengurusan ke-5</p>
+                        </div>
+                    </div>
+                    <div class="kabinet-item past-kabinet" data-anim="zoom-in" data-delay="350">
+                        <img src="Assets/HIMATEKINS SANCAKApng.png" alt="Logo Kabinet Sancaka" class="logo-kabinet"
+                            style="height: 60px; object-fit: contain; margin-bottom: 10px;">
+                        <p class="tl-year-box">2023</p>
+                        <div class="box-bottom">
+                            <p class="nama-kabinet">HIMATEKINS SANCAKA</p>
+                            <p class="periode">Kepengurusan ke-6</p>
+                        </div>
+                    </div>
+                    <div class="kabinet-item past-kabinet" data-anim="zoom-in" data-delay="400">
+                        <img src="Assets/HIMATEKINS ASTHA BRATA.png" alt="Logo Kabinet Astha Brata" class="logo-kabinet"
+                            style="height: 60px; object-fit: contain; margin-bottom: 10px;">
+                        <p class="tl-year-box">2024</p>
+                        <div class="box-bottom">
+                            <p class="nama-kabinet">HIMATEKINS ASTHA BRATA</p>
+                            <p class="periode">Kepengurusan ke-7</p>
+                        </div>
+                    </div>
+                    <div class="kabinet-item past-kabinet" data-anim="zoom-in" data-delay="450">
+                        <img src="Assets/Harmoni Aksi.png" alt="Logo Kabinet Harmoni Aksi" class="logo-kabinet"
+                            style="height: 60px; object-fit: contain; margin-bottom: 10px;">
+                        <p class="tl-year-box">2025</p>
+                        <div class="box-bottom">
+                            <p class="nama-kabinet">HIMATEKINS HARMONI AKSI</p>
+                            <p class="periode">Kepengurusan ke-8</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Poros Karya Description -->
+            <div class="poros-karya-inner" data-anim="fade-up">
+                <div class="poros-header-inner">
+                    <img src="Assets/Logo%20Poros%20Karya.png" alt="Logo Poros Karya" class="logo-poros-inner">
+                    <div>
+                        <h2 class="font-amidone poros-title-inner">Poros Karya</h2>
+                        <p class="tagline font-montserrat">"Bergerak Bersama, Tumbuh Bermakna"</p>
+                    </div>
+                </div>
+
+                <p class="poros-desc font-montserrat" data-anim="fade-up" data-delay="100">Kabinet Poros Karya adalah
+                    kabinet aktif HIMATEKINS ITS periode 2026 yang dipimpin oleh Yusuf Aldi. Dengan semangat "Bergerak
+                    Bersama, Tumbuh Bermakna", kabinet ini berkomitmen membangun sinergi internal yang solid,
+                    meningkatkan potensi akademik dan non-akademik mahasiswa, serta memperluas kolaborasi eksternal demi
+                    kebermanfaatan nyata bagi seluruh civitas akademika Teknik Instrumentasi ITS.</p>
+
+                <div class="visi-misi-inner-grid">
+                    <div class="paper-card visi-card" data-anim="fade-left" data-delay="200">
+                        <div class="clip"><i class="fas fa-paperclip"></i></div>
+                        <h3 class="font-amidone">VISI</h3>
+                        <p class="font-montserrat">Membangun sinergi internal HIMATEKINS ITS melalui wadah yang
+                            transparan dan inklusif demi mewujudkan iklim organisasi yang progresif dan berdampak bagi
+                            internal dan eksternal.</p>
+                        <p class="keywords font-montserrat">Sinergi • Progresif • Berdampak</p>
+                    </div>
+                    <div class="paper-card misi-card" data-anim="fade-right" data-delay="200">
+                        <div class="clip"><i class="fas fa-paperclip"></i></div>
+                        <h3 class="font-amidone">MISI</h3>
+                        <ol class="font-montserrat">
+                            <li>Mewujudkan relasi internal organisasi yang harmonis, transparan, serta mengedepankan
+                                asas kekeluargaan demi keberjalanan roda himpunan yang solid.</li>
+                            <li>Mengoptimalkan peningkatan potensi karya nyata mahasiswa melalui pendampingan akademik
+                                maupun non-akademik secara berkelanjutan.</li>
+                            <li>Meningkatkan eksistensi dan kolaborasi strategis eksternal melalui jejaring positif yang
+                                mendukung kebermanfaatan sosial secara nyata.</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- BOX 4: ASPIRASI — dark bg + glassmorphism form -->
+        <section class="aspirasi-dark-section" id="aspirasi" data-anim="fade-up">
+            <!-- Wave Divider at Top of Aspirasi (from Kabinet background color) -->
+            <div class="wave-divider-top">
+                <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120"
+                    preserveAspectRatio="none">
+                    <path
+                        d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z"
+                        fill="#EAEBEF"></path>
+                </svg>
+            </div>
+
+            <div class="aspirasi-cutting-mat"></div>
+            <div class="aspirasi-dark-inner">
+                <p class="aspirasi-subtitle font-montserrat">ASPIRASI</p>
+                <h2 class="font-amidone aspirasi-heading">Sampaikan<br>Suara Anda</h2>
+
+                <form class="aspirasi-glass-form" onsubmit="handleAspirasi(event)">
+                    <div class="aspirasi-field">
+                        <label class="font-montserrat asp-label" for="asp-nama">Nama Lengkap</label>
+                        <input class="asp-input" type="text" id="asp-nama" placeholder="Nama Lengkap" required>
+                    </div>
+                    <div class="aspirasi-field">
+                        <label class="font-montserrat asp-label" for="asp-email">Email Mahasiswa
+                            (@student.its.ac.id)</label>
+                        <input class="asp-input" type="email" id="asp-email" placeholder="email@student.its.ac.id"
+                            required>
+                    </div>
+                    <div class="aspirasi-field">
+                        <label class="font-montserrat asp-label" for="asp-pesan">Saran atau Aspirasi</label>
+                        <textarea class="asp-input asp-textarea" id="asp-pesan" rows="5"
+                            placeholder="Tuliskan aspirasi, saran, atau masukan kamu di sini..." required></textarea>
+                    </div>
+                    <div class="aspirasi-field">
+                        <label class="font-montserrat asp-label">Lampiran (opsional)</label>
+                        <label class="aspirasi-file-label font-montserrat">
+                            <i class="fas fa-paperclip"></i> Pilih File
+                            <input type="file"
+                                onchange="document.getElementById('file-name-display').textContent = this.files[0]?.name || 'Tidak ada file dipilih'">
+                        </label>
+                        <span id="file-name-display" class="font-montserrat asp-filename">Tidak ada file dipilih</span>
+                    </div>
+                    <button type="submit" class="aspirasi-submit-btn font-montserrat">
+                        <i class="fas fa-paper-plane"></i> Kirim Suara Saya
+                    </button>
+                </form>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ===================== FOOTER ===================== -->
+    <footer>
+        <p class="font-montserrat">&copy; 2026 HIMATEKINS ITS</p>
+        <div class="footer-icons">
+            <a href="https://tiktok.com/" target="_blank"><i class="fab fa-tiktok"></i></a>
+            <a href="https://youtube.com/" target="_blank"><i class="fab fa-youtube"></i></a>
+            <a href="https://instagram.com/himatekins_its" target="_blank"><i class="fab fa-instagram"></i></a>
+        </div>
+    </footer>
+
+    <script>
+        // Hamburger toggle
+        const hamburger = document.getElementById('hamburger-toggle');
+        const navMenu = document.getElementById('nav-menu');
+        hamburger.addEventListener('click', () => navMenu.classList.toggle('active'));
+
+        // Scroll Reveal Animation
+        const animObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) entry.target.classList.add('anim-visible');
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('[data-anim]').forEach(el => animObserver.observe(el));
+
+        // Hero — trigger langsung saat load
+        window.addEventListener('load', () => {
+            document.querySelectorAll('.hero [data-anim]').forEach(el => {
+                setTimeout(() => el.classList.add('anim-visible'), parseInt(el.dataset.delay || 0));
+            });
+        });
+
+        // Aspirasi form
+        function handleAspirasi(e) {
+            e.preventDefault();
+            const btn = e.target.querySelector('.aspirasi-submit-btn');
+            btn.innerHTML = '<i class="fas fa-check"></i> Terima kasih!';
+            btn.style.background = '#28a745';
+            setTimeout(() => {
+                btn.innerHTML = '<i class="fas fa-paper-plane"></i> Kirim Suara Saya';
+                btn.style.background = '';
+                e.target.reset();
+                document.getElementById('file-name-display').textContent = 'Tidak ada file dipilih';
+            }, 3000);
+        }
+    </script>
+
+</body>
+
+</html>
