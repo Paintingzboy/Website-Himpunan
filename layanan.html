@@ -59,6 +59,7 @@
                     </ul>
                 </li>
                 <li><a href="index.html#aspirasi">Aspirasi</a></li>
+                <li><a href="login.html" class="nav-admin-btn"><i class="fas fa-lock"></i> Admin</a></li>
             </ul>
         </div>
     </nav>
@@ -87,13 +88,10 @@
         <section class="layanan-container" id="info-beasiswa">
             <h2 class="font-amidone">Info Beasiswa</h2>
             <div class="search-bar-wrapper">
-                <input type="text" class="search-input font-montserrat" placeholder="Cari Beasiswa...">
-                <button class="search-btn font-montserrat">Cari Beasiswa</button>
+                <input type="text" id="search-beasiswa" class="search-input font-montserrat" placeholder="Cari Beasiswa...">
+                <button class="search-btn font-montserrat" onclick="filterLayanan('beasiswa')">Cari Beasiswa</button>
             </div>
-            
-            <!-- Tempat kartu akan di-generate oleh JavaScript -->
             <div class="info-grid" id="grid-beasiswa">
-                <!-- Contoh Placeholder Kartu Kosong (Seperti di desain) -->
                 <div class="info-card-placeholder"></div>
                 <div class="info-card-placeholder"></div>
                 <div class="info-card-placeholder"></div>
@@ -105,10 +103,9 @@
         <section class="layanan-container" id="info-lomba">
             <h2 class="font-amidone">Info Lomba</h2>
             <div class="search-bar-wrapper">
-                <input type="text" class="search-input font-montserrat" placeholder="Cari Lomba...">
-                <button class="search-btn font-montserrat">Cari Lomba</button>
+                <input type="text" id="search-lomba" class="search-input font-montserrat" placeholder="Cari Lomba...">
+                <button class="search-btn font-montserrat" onclick="filterLayanan('lomba')">Cari Lomba</button>
             </div>
-            
             <div class="info-grid" id="grid-lomba">
                 <div class="info-card-placeholder"></div>
                 <div class="info-card-placeholder"></div>
@@ -121,10 +118,9 @@
         <section class="layanan-container" id="info-magang">
             <h2 class="font-amidone">Info Magang</h2>
             <div class="search-bar-wrapper">
-                <input type="text" class="search-input font-montserrat" placeholder="Cari Magang...">
-                <button class="search-btn font-montserrat">Cari Magang</button>
+                <input type="text" id="search-magang" class="search-input font-montserrat" placeholder="Cari Magang...">
+                <button class="search-btn font-montserrat" onclick="filterLayanan('magang')">Cari Magang</button>
             </div>
-            
             <div class="info-grid" id="grid-magang">
                 <div class="info-card-placeholder"></div>
                 <div class="info-card-placeholder"></div>
@@ -152,6 +148,183 @@
             navMenu.classList.toggle('active');
         });
     </script>
+<style>
+    /* Info Card dari Firestore */
+    .info-card {
+        background: #FFFFFF;
+        border: 2px solid #000000;
+        border-radius: 18px;
+        padding: 22px 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        box-shadow: 3px 3px 0px rgba(0,0,0,0.1);
+        transition: transform 0.2s, box-shadow 0.2s;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .info-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 5px 8px 0px rgba(0,0,0,0.12);
+    }
+
+    .info-card-badge {
+        display: inline-block;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.65rem;
+        font-weight: 700;
+        padding: 3px 10px;
+        border-radius: 20px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 4px;
+        width: fit-content;
+    }
+
+    .info-card-badge.beasiswa { background: #EFF6FF; color: #0179C2; border: 1px solid #BFDBFE; }
+    .info-card-badge.lomba    { background: #F0FDF4; color: #16A34A; border: 1px solid #BBF7D0; }
+    .info-card-badge.magang   { background: #FFFBEB; color: #D97706; border: 1px solid #FDE68A; }
+
+    .info-card h3 {
+        font-family: 'AmidoneGrotesk', 'Montserrat', sans-serif;
+        color: #072B4D;
+        font-size: 1rem;
+        line-height: 1.3;
+    }
+
+    .info-card p {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.82rem;
+        color: #475569;
+        line-height: 1.6;
+        flex: 1;
+    }
+
+    .info-card a.info-card-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.78rem;
+        font-weight: 600;
+        color: #0179C2;
+        text-decoration: none;
+        margin-top: 4px;
+    }
+
+    .info-card a.info-card-link:hover { text-decoration: underline; }
+
+    .info-card-tanggal {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.72rem;
+        color: #94A3B8;
+        font-weight: 500;
+    }
+
+    .info-grid-empty {
+        grid-column: 1 / -1;
+        text-align: center;
+        padding: 40px 20px;
+        color: #94A3B8;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.88rem;
+    }
+
+    .info-grid-empty i { font-size: 2.5rem; display: block; margin-bottom: 12px; color: #CBD5E1; }
+</style>
+
+<script type="module">
+    import {
+        collection, getDocs, query, orderBy, where
+    } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+    import { db } from "./firebase-config.js";
+
+    // Simpan semua data agar bisa difilter tanpa re-fetch
+    let allData = { beasiswa: [], lomba: [], magang: [] };
+
+    function formatTanggal(ts) {
+        if (!ts) return '';
+        const d = ts.toDate ? ts.toDate() : new Date(ts);
+        return d.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+    }
+
+    function buatKartu(data) {
+        const kat = (data.kategori || '').toLowerCase();
+        return `
+        <div class="info-card">
+            <span class="info-card-badge ${kat}">${kat.charAt(0).toUpperCase() + kat.slice(1)}</span>
+            <h3 class="font-amidone">${data.judul || '—'}</h3>
+            <p class="font-montserrat">${data.deskripsi || ''}</p>
+            ${data.link ? `<a href="${data.link}" target="_blank" class="info-card-link font-montserrat"><i class="fas fa-external-link-alt"></i> Lihat Selengkapnya</a>` : ''}
+            ${data.createdAt ? `<span class="info-card-tanggal font-montserrat"><i class="fas fa-calendar-alt"></i> ${formatTanggal(data.createdAt)}</span>` : ''}
+        </div>`;
+    }
+
+    function renderGrid(gridId, items) {
+        const grid = document.getElementById(gridId);
+        if (!grid) return;
+        if (items.length === 0) {
+            grid.innerHTML = `<div class="info-grid-empty"><i class="fas fa-inbox"></i><p>Belum ada informasi tersedia.</p></div>`;
+        } else {
+            grid.innerHTML = items.map(buatKartu).join('');
+        }
+    }
+
+    // Load semua data sekaligus
+    async function muatSemuaLayanan() {
+        // Tampilkan loading state
+        ['grid-beasiswa', 'grid-lomba', 'grid-magang'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.innerHTML = '<div class="info-card-placeholder"></div><div class="info-card-placeholder"></div>';
+        });
+
+        try {
+            const q = query(collection(db, 'layanan'), orderBy('createdAt', 'desc'));
+            const snap = await getDocs(q);
+            allData = { beasiswa: [], lomba: [], magang: [] };
+
+            snap.forEach(doc => {
+                const data = { id: doc.id, ...doc.data() };
+                const kat = (data.kategori || '').toLowerCase();
+                if (allData[kat] !== undefined) allData[kat].push(data);
+            });
+
+            renderGrid('grid-beasiswa', allData.beasiswa);
+            renderGrid('grid-lomba',    allData.lomba);
+            renderGrid('grid-magang',   allData.magang);
+
+        } catch (e) {
+            ['grid-beasiswa', 'grid-lomba', 'grid-magang'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.innerHTML = `<div class="info-grid-empty"><i class="fas fa-exclamation-triangle"></i><p>Gagal memuat data.</p></div>`;
+            });
+            console.error('Error memuat layanan:', e);
+        }
+    }
+
+    // Filter lokal berdasarkan kata kunci pencarian
+    window.filterLayanan = function(kategori) {
+        const inputId = 'search-' + kategori;
+        const gridId  = 'grid-' + kategori;
+        const keyword = (document.getElementById(inputId)?.value || '').toLowerCase();
+        const filtered = allData[kategori].filter(d =>
+            (d.judul || '').toLowerCase().includes(keyword) ||
+            (d.deskripsi || '').toLowerCase().includes(keyword)
+        );
+        renderGrid(gridId, filtered);
+    };
+
+    // Real-time filter saat mengetik
+    ['beasiswa', 'lomba', 'magang'].forEach(kat => {
+        const input = document.getElementById('search-' + kat);
+        if (input) {
+            input.addEventListener('input', () => filterLayanan(kat));
+        }
+    });
+
+    muatSemuaLayanan();
+</script>
+
 </body>
-</html>
 </html>
