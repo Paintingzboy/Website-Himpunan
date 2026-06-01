@@ -1,0 +1,2378 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Admin - HIMATEKINS ITS</title>
+    <link rel="icon" href="Assets/LOGO HIMATEKINS.png" type="image/png" sizes="any">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Menggunakan style.css proyek untuk variabel & font base -->
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        /* ================================================================
+           ADMIN DASHBOARD — Internal Style
+           Selaras dengan tema HIMATEKINS: biru tua, Amidone, paper-card
+        ================================================================ */
+
+        @font-face {
+            font-family: 'AmidoneGrotesk';
+            src: url('Assets/AmidoneGrotesk.ttf') format('truetype'),
+                 url('Assets/AmidoneGrotesk.otf') format('opentype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        /* ------ Reset untuk layout admin ------ */
+        html, body {
+            height: 100%;
+            overflow: hidden; /* Scroll hanya di dalam panel */
+        }
+
+        body.bg-dark {
+            background-color: #092D4E;
+        }
+
+        /* Cutting-mat grid overlay (sama seperti bg-dark halaman utama) */
+        body.bg-dark::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            background-image:
+                linear-gradient(rgba(255,255,255,0.06) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+            background-size: 40px 40px;
+            -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.2) 60%, transparent 100%);
+            mask-image: linear-gradient(to bottom, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.2) 60%, transparent 100%);
+        }
+
+        /* ================================================================
+           LAYOUT UTAMA: Sidebar + Main Area
+        ================================================================ */
+        .admin-shell {
+            display: flex;
+            height: 100vh;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ----------------------------------------------------------------
+           SIDEBAR
+        ---------------------------------------------------------------- */
+        .admin-sidebar {
+            width: 270px;
+            flex-shrink: 0;
+            background: rgba(5, 22, 38, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-right: 1px solid rgba(255,255,255,0.08);
+            display: flex;
+            flex-direction: column;
+            padding: 0;
+            overflow-y: auto;
+            transition: width 0.3s ease, transform 0.3s ease;
+        }
+
+        /* Sidebar Header / Brand */
+        .sidebar-brand {
+            padding: 28px 24px 24px;
+            border-bottom: 1px solid rgba(255,255,255,0.07);
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .sidebar-brand img {
+            width: 44px;
+            height: 44px;
+            object-fit: contain;
+            filter: drop-shadow(0 2px 6px rgba(0,0,0,0.4));
+        }
+
+        .sidebar-brand-text .brand-title-admin {
+            font-family: 'AmidoneGrotesk', sans-serif;
+            color: #FFFFFF;
+            font-size: 1.1rem;
+            letter-spacing: 1px;
+            display: block;
+            line-height: 1;
+        }
+
+        .sidebar-brand-text .brand-sub-admin {
+            font-family: 'Montserrat', sans-serif;
+            color: rgba(255,255,255,0.45);
+            font-size: 0.6rem;
+            font-weight: 500;
+            display: block;
+            margin-top: 4px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        /* Admin badge di bawah brand */
+        .sidebar-admin-badge {
+            margin: 16px 20px 0;
+            background: rgba(135,206,250,0.1);
+            border: 1px solid rgba(135,206,250,0.25);
+            border-radius: 12px;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .sidebar-admin-badge .badge-avatar {
+            width: 38px;
+            height: 38px;
+            background: linear-gradient(135deg, #0179C2, #00395C);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            color: #fff;
+            flex-shrink: 0;
+        }
+
+        .sidebar-admin-badge .badge-info span {
+            display: block;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .badge-info .badge-name {
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: #FFFFFF;
+        }
+
+        .badge-info .badge-role {
+            font-size: 0.68rem;
+            color: #87CEFA;
+            font-weight: 500;
+            margin-top: 2px;
+            letter-spacing: 0.5px;
+        }
+
+        /* Sidebar Navigation */
+        .sidebar-nav {
+            padding: 20px 12px;
+            flex: 1;
+        }
+
+        .sidebar-nav-label {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.62rem;
+            font-weight: 700;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.3);
+            padding: 0 12px;
+            margin-bottom: 8px;
+            margin-top: 16px;
+            display: block;
+        }
+
+        .sidebar-nav-label:first-child { margin-top: 0; }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 11px 14px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.88rem;
+            font-weight: 500;
+            color: rgba(255,255,255,0.6);
+            transition: all 0.22s ease;
+            margin-bottom: 3px;
+            text-decoration: none;
+            position: relative;
+            border: none;
+            background: transparent;
+            width: 100%;
+            text-align: left;
+        }
+
+        .nav-item i {
+            width: 18px;
+            text-align: center;
+            font-size: 0.95rem;
+            transition: color 0.22s ease;
+        }
+
+        .nav-item .nav-badge {
+            margin-left: auto;
+            background: #E11D48;
+            color: #fff;
+            font-size: 0.65rem;
+            font-weight: 700;
+            padding: 2px 7px;
+            border-radius: 20px;
+            line-height: 1.5;
+        }
+
+        .nav-item:hover {
+            background: rgba(255,255,255,0.07);
+            color: #FFFFFF;
+        }
+
+        .nav-item.active {
+            background: rgba(1,121,194,0.2);
+            color: #FFFFFF;
+            font-weight: 600;
+            border: 1px solid rgba(1,121,194,0.3);
+        }
+
+        .nav-item.active i { color: #87CEFA; }
+
+        .nav-item.active::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 6px;
+            bottom: 6px;
+            width: 3px;
+            background: #0179C2;
+            border-radius: 0 3px 3px 0;
+        }
+
+        /* Sidebar Footer */
+        .sidebar-footer {
+            padding: 16px 12px 20px;
+            border-top: 1px solid rgba(255,255,255,0.07);
+        }
+
+        .logout-btn {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 11px 14px;
+            border-radius: 12px;
+            background: rgba(225, 29, 72, 0.1);
+            border: 1px solid rgba(225, 29, 72, 0.2);
+            color: #FDA4B4;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.88rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.22s ease;
+            width: 100%;
+            text-align: left;
+        }
+
+        .logout-btn:hover {
+            background: rgba(225, 29, 72, 0.2);
+            color: #FFFFFF;
+            border-color: rgba(225, 29, 72, 0.4);
+        }
+
+        .logout-btn i { width: 18px; text-align: center; }
+
+        /* ----------------------------------------------------------------
+           MAIN CONTENT AREA
+        ---------------------------------------------------------------- */
+        .admin-main {
+            flex: 1;
+            overflow-y: auto;
+            padding: 36px 40px;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        /* Top bar */
+        .admin-topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-shrink: 0;
+        }
+
+        .topbar-title h1 {
+            font-family: 'AmidoneGrotesk', sans-serif;
+            color: #FFFFFF;
+            font-size: 1.9rem;
+            letter-spacing: 1px;
+            line-height: 1;
+        }
+
+        .topbar-title p {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.82rem;
+            color: rgba(255,255,255,0.45);
+            margin-top: 6px;
+            font-weight: 500;
+        }
+
+        .topbar-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .topbar-chip {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 9px 16px;
+            background: rgba(255,255,255,0.07);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            color: rgba(255,255,255,0.6);
+            font-size: 0.82rem;
+            font-weight: 500;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .topbar-chip i { font-size: 0.85rem; color: #87CEFA; }
+
+        /* Hamburger mobile untuk sidebar */
+        .sidebar-toggle-btn {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            width: 38px;
+            height: 38px;
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 10px;
+            color: #FFFFFF;
+            cursor: pointer;
+            font-size: 1rem;
+            margin-right: 12px;
+            transition: background 0.2s;
+            flex-shrink: 0;
+        }
+        .sidebar-toggle-btn:hover { background: rgba(255,255,255,0.15); }
+
+        /* ================================================================
+           PANEL / TAB SECTIONS
+        ================================================================ */
+        .admin-panel {
+            display: none;
+            flex-direction: column;
+            gap: 28px;
+            animation: panelFadeIn 0.3s ease both;
+        }
+
+        .admin-panel.active { display: flex; }
+
+        @keyframes panelFadeIn {
+            from { opacity: 0; transform: translateY(12px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ================================================================
+           PAPER CARD (konsisten dengan halaman utama)
+        ================================================================ */
+        .paper-card-admin {
+            background: #FFFFFF;
+            border: 2px solid #000000;
+            border-radius: 20px;
+            padding: 30px 32px;
+            box-shadow: 4px 4px 0px rgba(0,0,0,0.12);
+        }
+
+        .paper-card-admin.dark-card {
+            background: #072B4D;
+            border-color: rgba(255,255,255,0.15);
+            color: #FFFFFF;
+            box-shadow: none;
+        }
+
+        .card-section-title {
+            font-family: 'AmidoneGrotesk', sans-serif;
+            color: #072B4D;
+            font-size: 1.4rem;
+            margin-bottom: 22px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding-bottom: 14px;
+            border-bottom: 2px dashed #CBD5E1;
+        }
+
+        .card-section-title i { color: #0179C2; font-size: 1.1rem; }
+        .card-section-title .title-badge {
+            margin-left: auto;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.72rem;
+            font-weight: 700;
+            padding: 4px 12px;
+            border-radius: 20px;
+            background: #EFF6FF;
+            color: #0179C2;
+            border: 1px solid #BFDBFE;
+            letter-spacing: 0.3px;
+        }
+
+        /* ================================================================
+           PANEL 1: RINGKASAN / HOME ADMIN
+        ================================================================ */
+
+        /* Stat grid */
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+        }
+
+        .stat-card {
+            background: #FFFFFF;
+            border: 2px solid #000000;
+            border-radius: 18px;
+            padding: 22px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            box-shadow: 3px 3px 0px rgba(0,0,0,0.1);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 5px 8px 0px rgba(0,0,0,0.12);
+        }
+
+        .stat-card::after {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            height: 4px;
+            border-radius: 0 0 16px 16px;
+        }
+
+        .stat-card.c-blue::after   { background: #0179C2; }
+        .stat-card.c-green::after  { background: #16A34A; }
+        .stat-card.c-amber::after  { background: #D97706; }
+        .stat-card.c-red::after    { background: #E11D48; }
+
+        .stat-icon {
+            width: 46px;
+            height: 46px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .stat-icon.ic-blue  { background: #EFF6FF; color: #0179C2; }
+        .stat-icon.ic-green { background: #F0FDF4; color: #16A34A; }
+        .stat-icon.ic-amber { background: #FFFBEB; color: #D97706; }
+        .stat-icon.ic-red   { background: #FFF1F2; color: #E11D48; }
+
+        .stat-number {
+            font-family: 'AmidoneGrotesk', sans-serif;
+            font-size: 2.2rem;
+            color: #072B4D;
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: #64748B;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: -6px;
+        }
+
+        /* Activity feed */
+        .activity-feed { display: flex; flex-direction: column; gap: 14px; }
+
+        .activity-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            padding: 14px 16px;
+            background: #F8FAFC;
+            border: 1px solid #E2E8F0;
+            border-radius: 14px;
+            transition: border-color 0.2s;
+        }
+
+        .activity-item:hover { border-color: #0179C2; }
+
+        .activity-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        .activity-icon.ai-blue  { background: #EFF6FF; color: #0179C2; }
+        .activity-icon.ai-green { background: #F0FDF4; color: #16A34A; }
+        .activity-icon.ai-amber { background: #FFFBEB; color: #D97706; }
+
+        .activity-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .activity-info p {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.85rem;
+            color: #1E293B;
+            font-weight: 500;
+            line-height: 1.5;
+        }
+
+        .activity-info span {
+            font-size: 0.72rem;
+            color: #94A3B8;
+            font-weight: 500;
+        }
+
+        /* ================================================================
+           PANEL 2: KOTAK ASPIRASI
+        ================================================================ */
+        .aspirasi-toolbar {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 4px;
+        }
+
+        .toolbar-search {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 16px;
+            background: #F1F5F9;
+            border: 1.5px solid #CBD5E1;
+            border-radius: 12px;
+            transition: border-color 0.2s;
+        }
+
+        .toolbar-search:focus-within { border-color: #0179C2; }
+        .toolbar-search i { color: #94A3B8; font-size: 0.9rem; }
+
+        .toolbar-search input {
+            border: none;
+            background: transparent;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.88rem;
+            color: #1E293B;
+            outline: none;
+            width: 100%;
+        }
+
+        .toolbar-search input::placeholder { color: #94A3B8; }
+
+        .toolbar-filter {
+            padding: 10px 18px;
+            background: #F1F5F9;
+            border: 1.5px solid #CBD5E1;
+            border-radius: 12px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #475569;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+
+        .toolbar-filter:hover { border-color: #0179C2; color: #0179C2; }
+
+        /* Aspirasi List */
+        .aspirasi-list-admin { display: flex; flex-direction: column; gap: 16px; }
+
+        .asp-card {
+            background: #F8FAFC;
+            border: 1.5px solid #E2E8F0;
+            border-radius: 16px;
+            padding: 20px 22px;
+            transition: all 0.22s ease;
+            position: relative;
+        }
+
+        .asp-card:hover {
+            border-color: #072B4D;
+            background: #FFFFFF;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.06);
+        }
+
+        .asp-card.asp-done {
+            opacity: 0.55;
+            border-style: dashed;
+        }
+
+        .asp-card-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+        }
+
+        .asp-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #0179C2, #00395C);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 0.85rem;
+            flex-shrink: 0;
+        }
+
+        .asp-sender {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .asp-sender .asp-name {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.88rem;
+            font-weight: 700;
+            color: #072B4D;
+            display: block;
+        }
+
+        .asp-sender .asp-email {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.72rem;
+            color: #64748B;
+            display: block;
+            margin-top: 1px;
+        }
+
+        .asp-timestamp {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.72rem;
+            color: #94A3B8;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        .asp-status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #E11D48;
+            flex-shrink: 0;
+            box-shadow: 0 0 0 3px rgba(225,29,72,0.15);
+        }
+
+        .asp-status-dot.done { background: #16A34A; box-shadow: 0 0 0 3px rgba(22,163,74,0.15); }
+
+        .asp-text {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.9rem;
+            color: #334155;
+            line-height: 1.65;
+            margin-bottom: 16px;
+            border-left: 3px solid #E2E8F0;
+            padding-left: 14px;
+        }
+
+        .asp-card-footer {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .asp-file-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 7px 14px;
+            background: #EFF6FF;
+            color: #0179C2;
+            border: 1px solid #BFDBFE;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .asp-file-chip:hover { background: #0179C2; color: #fff; border-color: #0179C2; }
+
+        .asp-action-group { display: flex; gap: 8px; margin-left: auto; }
+
+        .asp-btn {
+            padding: 8px 16px;
+            border-radius: 9px;
+            border: 1.5px solid;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            transition: all 0.2s;
+        }
+
+        .asp-btn.btn-done {
+            background: #F0FDF4;
+            color: #16A34A;
+            border-color: #BBF7D0;
+        }
+
+        .asp-btn.btn-done:hover {
+            background: #16A34A;
+            color: #fff;
+            border-color: #16A34A;
+        }
+
+        .asp-btn.btn-delete {
+            background: #FFF1F2;
+            color: #E11D48;
+            border-color: #FECDD3;
+        }
+
+        .asp-btn.btn-delete:hover {
+            background: #E11D48;
+            color: #fff;
+            border-color: #E11D48;
+        }
+
+        .asp-btn.btn-done.is-done {
+            background: #DCFCE7;
+            color: #15803D;
+            border-color: #86EFAC;
+        }
+
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 50px 20px;
+            color: #94A3B8;
+        }
+        .empty-state i { font-size: 3rem; margin-bottom: 16px; display: block; color: #CBD5E1; }
+        .empty-state p { font-size: 0.9rem; font-family: 'Montserrat', sans-serif; font-weight: 500; }
+
+        /* ================================================================
+           PANEL 3: PINTASAN MANAJEMEN KONTEN
+        ================================================================ */
+        .info-banner {
+            background: #EFF6FF;
+            border: 1.5px solid #BFDBFE;
+            border-radius: 14px;
+            padding: 16px 20px;
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            margin-bottom: 4px;
+        }
+
+        .info-banner i { color: #0179C2; font-size: 1.1rem; margin-top: 2px; flex-shrink: 0; }
+
+        .info-banner p {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.85rem;
+            color: #1E40AF;
+            line-height: 1.6;
+            font-weight: 500;
+        }
+
+        .shortcut-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .shortcut-card {
+            background: #FFFFFF;
+            border: 2px solid #000000;
+            border-radius: 20px;
+            padding: 28px 24px;
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            box-shadow: 3px 3px 0px rgba(0,0,0,0.1);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .shortcut-card:hover {
+            transform: translateY(-4px) translateX(-2px);
+            box-shadow: 6px 8px 0px rgba(0,0,0,0.15);
+        }
+
+        .shortcut-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 5px;
+        }
+
+        .sc-blue::before   { background: linear-gradient(90deg, #0179C2, #3582A9); }
+        .sc-teal::before   { background: linear-gradient(90deg, #0D9488, #14B8A6); }
+        .sc-violet::before { background: linear-gradient(90deg, #7C3AED, #A78BFA); }
+
+        .shortcut-icon {
+            width: 52px;
+            height: 52px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+        }
+
+        .shortcut-icon.si-blue   { background: #EFF6FF; color: #0179C2; }
+        .shortcut-icon.si-teal   { background: #F0FDFA; color: #0D9488; }
+        .shortcut-icon.si-violet { background: #F5F3FF; color: #7C3AED; }
+
+        .shortcut-info h3 {
+            font-family: 'AmidoneGrotesk', sans-serif;
+            font-size: 1.05rem;
+            color: #072B4D;
+            margin-bottom: 6px;
+        }
+
+        .shortcut-info p {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.8rem;
+            color: #64748B;
+            line-height: 1.55;
+        }
+
+        .shortcut-features {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+            border-top: 1.5px dashed #E2E8F0;
+            padding-top: 14px;
+        }
+
+        .shortcut-feature {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.78rem;
+            color: #475569;
+            font-weight: 500;
+        }
+
+        .shortcut-feature i { font-size: 0.7rem; color: #16A34A; }
+
+        .shortcut-link-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-top: 4px;
+        }
+
+        .shortcut-open {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: #0179C2;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .shortcut-open i { font-size: 0.75rem; transition: transform 0.2s; }
+        .shortcut-card:hover .shortcut-open i { transform: translateX(4px); }
+
+        /* ================================================================
+           PANEL 4: PENGATURAN
+        ================================================================ */
+        .settings-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .setting-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 18px 20px;
+            background: #F8FAFC;
+            border: 1px solid #E2E8F0;
+            border-radius: 14px;
+        }
+
+        .setting-left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .setting-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            background: #EFF6FF;
+            color: #0179C2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.95rem;
+        }
+
+        .setting-label {
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .setting-label strong {
+            font-size: 0.88rem;
+            color: #1E293B;
+            display: block;
+        }
+
+        .setting-label span {
+            font-size: 0.75rem;
+            color: #94A3B8;
+        }
+
+        /* Toggle switch */
+        .toggle {
+            position: relative;
+            width: 44px;
+            height: 24px;
+        }
+
+        .toggle input { opacity: 0; width: 0; height: 0; }
+
+        .toggle-track {
+            position: absolute;
+            inset: 0;
+            background: #CBD5E1;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: background 0.25s;
+        }
+
+        .toggle-track::after {
+            content: '';
+            position: absolute;
+            left: 3px;
+            top: 3px;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #fff;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+            transition: transform 0.25s;
+        }
+
+        .toggle input:checked + .toggle-track { background: #0179C2; }
+        .toggle input:checked + .toggle-track::after { transform: translateX(20px); }
+
+        /* ================================================================
+           OVERLAY untuk mobile sidebar
+        ================================================================ */
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 99;
+        }
+
+        .sidebar-overlay.visible { display: block; }
+
+        /* ================================================================
+           RESPONSIVE
+        ================================================================ */
+        @media (max-width: 1024px) {
+            .stat-grid { grid-template-columns: repeat(2, 1fr); }
+            .shortcut-grid { grid-template-columns: repeat(2, 1fr); }
+            .settings-grid { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 900px) {
+            html, body { overflow: auto; }
+
+            .admin-sidebar {
+                position: fixed;
+                left: 0; top: 0; bottom: 0;
+                z-index: 100;
+                transform: translateX(-100%);
+                width: 260px;
+            }
+
+            .admin-sidebar.open { transform: translateX(0); }
+
+            .admin-main { padding: 20px 20px; }
+            .sidebar-toggle-btn { display: flex; }
+
+            .topbar-chip { display: none; }
+        }
+
+        @media (max-width: 600px) {
+            .stat-grid { grid-template-columns: 1fr 1fr; }
+            .shortcut-grid { grid-template-columns: 1fr; }
+            .asp-card-header { flex-wrap: wrap; }
+            .asp-action-group { width: 100%; margin-left: 0; }
+            .asp-btn { flex: 1; justify-content: center; }
+            .admin-main { padding: 16px; }
+        }
+        /* ================================================================
+           PANEL KELOLA LAYANAN
+        ================================================================ */
+        .layanan-filter-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .btn-filter-layanan {
+            padding: 9px 20px;
+            border-radius: 20px;
+            border: 1.5px solid #CBD5E1;
+            background: #F1F5F9;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: #475569;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-filter-layanan.active,
+        .btn-filter-layanan:hover {
+            background: #072B4D;
+            color: #FFFFFF;
+            border-color: #072B4D;
+        }
+
+        .layanan-form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .layanan-form-grid .full-width { grid-column: 1 / -1; }
+
+        .form-field label {
+            display: block;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: #072B4D;
+            margin-bottom: 7px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-field input,
+        .form-field select,
+        .form-field textarea {
+            width: 100%;
+            padding: 11px 14px;
+            border-radius: 10px;
+            border: 1.5px solid #CBD5E1;
+            background: #F8FAFC;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.88rem;
+            color: #1E293B;
+            outline: none;
+            transition: border-color 0.2s;
+            box-sizing: border-box;
+        }
+
+        .form-field input:focus,
+        .form-field select:focus,
+        .form-field textarea:focus {
+            border-color: #0179C2;
+            background: #FFFFFF;
+        }
+
+        .form-field textarea { resize: vertical; min-height: 80px; }
+
+        .btn-simpan-layanan {
+            padding: 12px 28px;
+            background: #072B4D;
+            color: #FFFFFF;
+            border: none;
+            border-radius: 12px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.88rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background 0.2s;
+        }
+
+        .btn-simpan-layanan:hover { background: #0179C2; }
+        .btn-simpan-layanan:disabled { opacity: 0.6; cursor: not-allowed; }
+
+        /* Layanan Admin Card List */
+        #list-layanan-admin { display: flex; flex-direction: column; gap: 14px; margin-top: 8px; }
+
+        .layanan-admin-card {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            padding: 18px 20px;
+            background: #F8FAFC;
+            border: 1.5px solid #E2E8F0;
+            border-radius: 14px;
+            transition: border-color 0.2s;
+        }
+
+        .layanan-admin-card:hover { border-color: #0179C2; background: #FFFFFF; }
+
+        .lac-info { flex: 1; min-width: 0; }
+
+        .lac-badge {
+            display: inline-block;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.65rem;
+            font-weight: 700;
+            padding: 3px 10px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .lac-badge--beasiswa { background: #EFF6FF; color: #0179C2; border: 1px solid #BFDBFE; }
+        .lac-badge--lomba    { background: #F0FDF4; color: #16A34A; border: 1px solid #BBF7D0; }
+        .lac-badge--magang   { background: #FFFBEB; color: #D97706; border: 1px solid #FDE68A; }
+
+        .lac-judul {
+            font-size: 1rem;
+            color: #072B4D;
+            margin-bottom: 5px;
+        }
+
+        .lac-desc {
+            font-size: 0.82rem;
+            color: #64748B;
+            line-height: 1.55;
+            margin-bottom: 6px;
+        }
+
+        .lac-link {
+            font-size: 0.78rem;
+            color: #0179C2;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .lac-link:hover { text-decoration: underline; }
+
+        .lac-hapus {
+            padding: 8px 12px;
+            background: #FFF1F2;
+            border: 1.5px solid #FECDD3;
+            border-radius: 10px;
+            color: #E11D48;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+
+        .lac-hapus:hover { background: #E11D48; color: #fff; border-color: #E11D48; }
+
+        /* Stat layanan live */
+        #stat-layanan-aktif { transition: all 0.3s; }
+
+        /* ================================================================
+           PANEL KELOLA BERITA
+        ================================================================ */
+        .berita-form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+        .berita-form-grid .full-width { grid-column: 1 / -1; }
+
+        /* Berita Admin Card List */
+        #list-berita-admin { display: flex; flex-direction: column; gap: 14px; margin-top: 8px; }
+
+        .berita-admin-card {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            padding: 18px 20px;
+            background: #F8FAFC;
+            border: 1.5px solid #E2E8F0;
+            border-radius: 14px;
+            transition: border-color 0.2s;
+        }
+
+        .berita-admin-card:hover { border-color: #0179C2; background: #FFFFFF; }
+
+        .bac-foto {
+            width: 90px;
+            height: 72px;
+            border-radius: 10px;
+            object-fit: cover;
+            flex-shrink: 0;
+            background: #E2E8F0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #94A3B8;
+            font-size: 1.5rem;
+            overflow: hidden;
+        }
+
+        .bac-foto img { width: 100%; height: 100%; object-fit: cover; }
+
+        .bac-info { flex: 1; min-width: 0; }
+
+        .bac-judul {
+            font-size: 1rem;
+            color: #072B4D;
+            margin-bottom: 5px;
+        }
+
+        .bac-kutipan {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.82rem;
+            color: #64748B;
+            line-height: 1.55;
+            margin-bottom: 5px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .bac-tanggal {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.72rem;
+            color: #94A3B8;
+        }
+
+        .bac-hapus {
+            padding: 8px 12px;
+            background: #FFF1F2;
+            border: 1.5px solid #FECDD3;
+            border-radius: 10px;
+            color: #E11D48;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+
+        .bac-hapus:hover { background: #E11D48; color: #fff; border-color: #E11D48; }
+
+        /* Preview foto URL */
+        .foto-preview-wrap {
+            margin-top: 8px;
+        }
+        .foto-preview-wrap img {
+            max-height: 120px;
+            border-radius: 10px;
+            border: 1.5px solid #E2E8F0;
+            display: none;
+        }
+
+    </style>
+</head>
+
+<body class="bg-dark">
+<!-- Overlay untuk tutup sidebar di mobile -->
+<div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+<div class="admin-shell">
+
+    <!-- ====================================================
+         SIDEBAR
+    ==================================================== -->
+    <aside class="admin-sidebar" id="admin-sidebar">
+
+        <!-- Brand -->
+        <div class="sidebar-brand">
+            <img src="Assets/LOGO HIMATEKINS.png" alt="Logo HIMATEKINS">
+            <div class="sidebar-brand-text">
+                <span class="brand-title-admin">HIMATEKINS</span>
+                <span class="brand-sub-admin">Pusat Kendali Admin</span>
+            </div>
+        </div>
+
+        <!-- Admin Badge -->
+        <div class="sidebar-admin-badge">
+            <div class="badge-avatar"><i class="fas fa-user-shield"></i></div>
+            <div class="badge-info">
+                <span class="badge-name" id="sidebar-admin-name">Administrator</span>
+                <span class="badge-role">ADMIN AKTIF</span>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <nav class="sidebar-nav">
+            <span class="sidebar-nav-label">Menu Utama</span>
+
+            <button class="nav-item active" data-target="panel-ringkasan">
+                <i class="fas fa-home"></i>
+                Ringkasan
+            </button>
+            <button class="nav-item" data-target="panel-aspirasi">
+                <i class="fas fa-inbox"></i>
+                Kotak Aspirasi
+                <span class="nav-badge" id="badge-aspirasi">3</span>
+            </button>
+            <button class="nav-item" data-target="panel-pintasan">
+                <i class="fas fa-bolt"></i>
+                Pintasan Konten
+            </button>
+            <button class="nav-item" data-target="panel-layanan">
+                <i class="fas fa-concierge-bell"></i>
+                Kelola Layanan
+            </button>
+            <button class="nav-item" data-target="panel-berita">
+                <i class="fas fa-newspaper"></i>
+                Kelola Berita
+            </button>
+
+            <span class="sidebar-nav-label">Navigasi Web</span>
+
+            <a href="index.html" class="nav-item" target="_blank">
+                <i class="fas fa-globe"></i>
+                Lihat Website
+            </a>
+            <a href="kabar.html" class="nav-item" target="_blank">
+                <i class="fas fa-newspaper"></i>
+                Kabar Himpunan
+            </a>
+            <a href="akademik.html" class="nav-item" target="_blank">
+                <i class="fas fa-flask"></i>
+                Akademik & Riset
+            </a>
+            <a href="layanan.html" class="nav-item" target="_blank">
+                <i class="fas fa-concierge-bell"></i>
+                Layanan Mahasiswa
+            </a>
+
+            <span class="sidebar-nav-label">Sistem</span>
+
+            <button class="nav-item" data-target="panel-pengaturan">
+                <i class="fas fa-cog"></i>
+                Pengaturan
+            </button>
+        </nav>
+
+        <!-- Logout -->
+        <div class="sidebar-footer">
+            <button class="logout-btn" id="btn-logout">
+                <i class="fas fa-sign-out-alt"></i>
+                Keluar Sistem
+            </button>
+        </div>
+
+    </aside>
+
+    <!-- ====================================================
+         MAIN CONTENT
+    ==================================================== -->
+    <main class="admin-main">
+
+        <!-- TOP BAR -->
+        <div class="admin-topbar">
+            <div style="display:flex; align-items:center; gap:0;">
+                <button class="sidebar-toggle-btn" id="sidebar-toggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="topbar-title">
+                    <h1 class="font-amidone" id="topbar-heading">Ringkasan</h1>
+                    <p class="font-montserrat" id="topbar-sub">Selamat datang di Pusat Kendali Admin HIMATEKINS ITS</p>
+                </div>
+            </div>
+            <div class="topbar-actions">
+                <div class="topbar-chip font-montserrat">
+                    <i class="fas fa-circle"></i>
+                    <span id="topbar-datetime">—</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================================
+             PANEL 1: RINGKASAN
+        ============================================================ -->
+        <div class="admin-panel active" id="panel-ringkasan">
+
+            <!-- Stat Cards -->
+            <div class="stat-grid">
+                <div class="stat-card c-blue">
+                    <div class="stat-icon ic-blue"><i class="fas fa-newspaper"></i></div>
+                    <div>
+                        <div class="stat-number font-amidone" id="stat-total-berita">—</div>
+                        <div class="stat-label font-montserrat">Total Berita</div>
+                    </div>
+                </div>
+                <div class="stat-card c-green">
+                    <div class="stat-icon ic-green"><i class="fas fa-book-open"></i></div>
+                    <div>
+                        <div class="stat-number font-amidone">8</div>
+                        <div class="stat-label font-montserrat">Modul & Template</div>
+                    </div>
+                </div>
+                <div class="stat-card c-amber">
+                    <div class="stat-icon ic-amber"><i class="fas fa-briefcase"></i></div>
+                    <div>
+                        <div class="stat-number font-amidone" id="stat-layanan-aktif">—</div>
+                        <div class="stat-label font-montserrat">Info Layanan Aktif</div>
+                    </div>
+                </div>
+                <div class="stat-card c-red">
+                    <div class="stat-icon ic-red"><i class="fas fa-envelope-open-text"></i></div>
+                    <div>
+                        <div class="stat-number font-amidone" id="stat-asp-belum">3</div>
+                        <div class="stat-label font-montserrat">Aspirasi Belum Dibaca</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Aktivitas Terbaru -->
+            <div class="paper-card-admin">
+                <div class="card-section-title font-amidone">
+                    <i class="fas fa-clock-rotate-left"></i>
+                    Aktivitas Terbaru
+                    <span class="title-badge">Hari Ini</span>
+                </div>
+                <div class="activity-feed">
+                    <div class="activity-item">
+                        <div class="activity-icon ai-blue"><i class="fas fa-inbox"></i></div>
+                        <div class="activity-info">
+                            <p>Aspirasi baru masuk dari <strong>mhs.instrumentasi@mhs.its.ac.id</strong></p>
+                            <span>Hari ini, 14:23 WIB</span>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-icon ai-green"><i class="fas fa-check-circle"></i></div>
+                        <div class="activity-info">
+                            <p>Aspirasi dari <strong>Anon</strong> ditandai selesai oleh Admin</p>
+                            <span>Kemarin, 09:10 WIB</span>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-icon ai-amber"><i class="fas fa-sign-in-alt"></i></div>
+                        <div class="activity-info">
+                            <p>Admin login ke dashboard dari perangkat baru</p>
+                            <span>Kemarin, 08:55 WIB</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- ============================================================
+             PANEL 2: KOTAK ASPIRASI
+        ============================================================ -->
+        <div class="admin-panel" id="panel-aspirasi">
+            <div class="paper-card-admin">
+                <div class="card-section-title font-amidone">
+                    <i class="fas fa-inbox"></i>
+                    Kotak Aspirasi Masuk
+                    <span class="title-badge" id="asp-count-badge">3 Belum Dibaca</span>
+                </div>
+
+                <!-- Toolbar -->
+                <div class="aspirasi-toolbar">
+                    <div class="toolbar-search">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="asp-search" placeholder="Cari aspirasi...">
+                    </div>
+                    <button class="toolbar-filter font-montserrat" id="btn-filter-all">
+                        <i class="fas fa-filter"></i> Semua
+                    </button>
+                    <button class="toolbar-filter font-montserrat" id="btn-filter-unread">
+                        <i class="fas fa-dot-circle"></i> Belum Selesai
+                    </button>
+                </div>
+
+                <!-- Aspirasi Cards — diisi otomatis dari Firestore -->
+                <div class="aspirasi-list-admin" id="asp-list">
+                    <p class="font-montserrat" style="color:#94A3B8; text-align:center; padding:30px 0;">
+                        <i class="fas fa-spinner fa-spin" style="font-size:1.5rem; display:block; margin-bottom:10px;"></i>
+                        Memuat aspirasi...
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================================
+             PANEL 3: PINTASAN KONTEN
+        ============================================================ -->
+        <div class="admin-panel" id="panel-pintasan">
+
+            <div class="info-banner">
+                <i class="fas fa-info-circle"></i>
+                <p class="font-montserrat">
+                    <strong>Cara Kerja Manajemen Konten:</strong> Tombol <strong>Tambah (+)</strong>, <strong>Edit</strong>, dan <strong>Hapus</strong> akan otomatis muncul di halaman terkait saat Anda terdeteksi sebagai Admin. Klik kartu di bawah untuk langsung menuju halaman pengelolaan konten.
+                </p>
+            </div>
+
+            <div class="shortcut-grid">
+
+                <!-- Kabar Himpunan -->
+                <a href="kabar.html" class="shortcut-card sc-blue" target="_blank">
+                    <div class="shortcut-icon si-blue"><i class="fas fa-newspaper"></i></div>
+                    <div class="shortcut-info">
+                        <h3>Kabar Himpunan</h3>
+                        <p>Kelola berita, rilis resmi, dan dokumentasi kegiatan HIMATEKINS ITS.</p>
+                    </div>
+                    <div class="shortcut-features">
+                        <div class="shortcut-feature font-montserrat">
+                            <i class="fas fa-check-circle"></i> Tambah berita baru
+                        </div>
+                        <div class="shortcut-feature font-montserrat">
+                            <i class="fas fa-check-circle"></i> Edit & hapus berita
+                        </div>
+                        <div class="shortcut-feature font-montserrat">
+                            <i class="fas fa-check-circle"></i> Upload foto dokumentasi
+                        </div>
+                    </div>
+                    <div class="shortcut-link-row">
+                        <span class="shortcut-open font-montserrat">
+                            Buka Kabar.html <i class="fas fa-arrow-right"></i>
+                        </span>
+                    </div>
+                </a>
+
+                <!-- Akademik & Riset -->
+                <a href="akademik.html" class="shortcut-card sc-teal" target="_blank">
+                    <div class="shortcut-icon si-teal"><i class="fas fa-flask"></i></div>
+                    <div class="shortcut-info">
+                        <h3>Akademik & Riset</h3>
+                        <p>Upload dan kelola modul praktikum, template laporan, serta profil laboratorium.</p>
+                    </div>
+                    <div class="shortcut-features">
+                        <div class="shortcut-feature font-montserrat">
+                            <i class="fas fa-check-circle"></i> Upload modul baru
+                        </div>
+                        <div class="shortcut-feature font-montserrat">
+                            <i class="fas fa-check-circle"></i> Update template laporan
+                        </div>
+                        <div class="shortcut-feature font-montserrat">
+                            <i class="fas fa-check-circle"></i> Edit profil laboratorium
+                        </div>
+                    </div>
+                    <div class="shortcut-link-row">
+                        <span class="shortcut-open font-montserrat">
+                            Buka Akademik.html <i class="fas fa-arrow-right"></i>
+                        </span>
+                    </div>
+                </a>
+
+                <!-- Layanan Mahasiswa -->
+                <a href="layanan.html" class="shortcut-card sc-violet" target="_blank">
+                    <div class="shortcut-icon si-violet"><i class="fas fa-concierge-bell"></i></div>
+                    <div class="shortcut-info">
+                        <h3>Layanan Mahasiswa</h3>
+                        <p>Tambah dan perbarui informasi beasiswa, lowongan magang, dan info lomba/kompetisi.</p>
+                    </div>
+                    <div class="shortcut-features">
+                        <div class="shortcut-feature font-montserrat">
+                            <i class="fas fa-check-circle"></i> Tambah info beasiswa
+                        </div>
+                        <div class="shortcut-feature font-montserrat">
+                            <i class="fas fa-check-circle"></i> Post lowongan magang baru
+                        </div>
+                        <div class="shortcut-feature font-montserrat">
+                            <i class="fas fa-check-circle"></i> Update info lomba
+                        </div>
+                    </div>
+                    <div class="shortcut-link-row">
+                        <span class="shortcut-open font-montserrat">
+                            Buka Layanan.html <i class="fas fa-arrow-right"></i>
+                        </span>
+                    </div>
+                </a>
+
+            </div>
+        </div>
+
+        <!-- ============================================================
+             PANEL 4: PENGATURAN
+        ============================================================ -->
+        <div class="admin-panel" id="panel-pengaturan">
+            <div class="paper-card-admin">
+                <div class="card-section-title font-amidone">
+                    <i class="fas fa-cog"></i>
+                    Pengaturan Sistem
+                </div>
+                <div class="settings-grid">
+                    <div class="setting-item">
+                        <div class="setting-left">
+                            <div class="setting-icon"><i class="fas fa-bell"></i></div>
+                            <div class="setting-label">
+                                <strong class="font-montserrat">Notifikasi Email</strong>
+                                <span class="font-montserrat">Kirim email saat aspirasi baru masuk</span>
+                            </div>
+                        </div>
+                        <label class="toggle">
+                            <input type="checkbox" checked>
+                            <div class="toggle-track"></div>
+                        </label>
+                    </div>
+                    <div class="setting-item">
+                        <div class="setting-left">
+                            <div class="setting-icon"><i class="fas fa-user-secret"></i></div>
+                            <div class="setting-label">
+                                <strong class="font-montserrat">Izinkan Kiriman Anonim</strong>
+                                <span class="font-montserrat">Mahasiswa boleh kirim aspirasi tanpa nama</span>
+                            </div>
+                        </div>
+                        <label class="toggle">
+                            <input type="checkbox" checked>
+                            <div class="toggle-track"></div>
+                        </label>
+                    </div>
+                    <div class="setting-item">
+                        <div class="setting-left">
+                            <div class="setting-icon"><i class="fas fa-paperclip"></i></div>
+                            <div class="setting-label">
+                                <strong class="font-montserrat">Izinkan Lampiran File</strong>
+                                <span class="font-montserrat">Mahasiswa dapat melampirkan file</span>
+                            </div>
+                        </div>
+                        <label class="toggle">
+                            <input type="checkbox" checked>
+                            <div class="toggle-track"></div>
+                        </label>
+                    </div>
+                    <div class="setting-item">
+                        <div class="setting-left">
+                            <div class="setting-icon"><i class="fas fa-shield-alt"></i></div>
+                            <div class="setting-label">
+                                <strong class="font-montserrat">Mode Maintenance</strong>
+                                <span class="font-montserrat">Sembunyikan website dari publik</span>
+                            </div>
+                        </div>
+                        <label class="toggle">
+                            <input type="checkbox">
+                            <div class="toggle-track"></div>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Info Akun -->
+            <div class="paper-card-admin">
+                <div class="card-section-title font-amidone">
+                    <i class="fas fa-id-card"></i>
+                    Info Akun Admin
+                </div>
+                <div style="display:flex; flex-direction:column; gap:14px;">
+                    <div class="setting-item">
+                        <div class="setting-left">
+                            <div class="setting-icon"><i class="fas fa-envelope"></i></div>
+                            <div class="setting-label">
+                                <strong class="font-montserrat">Email Admin</strong>
+                                <span class="font-montserrat" id="settings-email">—</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="setting-item">
+                        <div class="setting-left">
+                            <div class="setting-icon"><i class="fas fa-database"></i></div>
+                            <div class="setting-label">
+                                <strong class="font-montserrat">Database</strong>
+                                <span class="font-montserrat">Firebase Firestore (Siap diintegrasikan)</span>
+                            </div>
+                        </div>
+                        <span style="font-size:0.75rem;color:#16A34A;font-weight:700;font-family:'Montserrat',sans-serif;background:#F0FDF4;padding:4px 10px;border-radius:8px;border:1px solid #BBF7D0;">
+                            SIAP
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================================
+             PANEL 5: KELOLA LAYANAN (Beasiswa, Lomba, Magang)
+        ============================================================ -->
+        <div class="admin-panel" id="panel-layanan">
+
+            <!-- Form Tambah -->
+            <div class="paper-card-admin">
+                <div class="card-section-title font-amidone">
+                    <i class="fas fa-plus-circle"></i>
+                    Tambah Info Baru
+                </div>
+                <form id="form-tambah-layanan">
+                    <div class="layanan-form-grid">
+                        <div class="form-field">
+                            <label>Judul</label>
+                            <input type="text" id="inp-judul" required placeholder="Contoh: Beasiswa Djarum 2026">
+                        </div>
+                        <div class="form-field">
+                            <label>Kategori</label>
+                            <select id="inp-kategori" required>
+                                <option value="beasiswa">Beasiswa</option>
+                                <option value="lomba">Lomba</option>
+                                <option value="magang">Magang</option>
+                            </select>
+                        </div>
+                        <div class="form-field full-width">
+                            <label>Deskripsi</label>
+                            <textarea id="inp-deskripsi" required placeholder="Tulis detail informasi di sini..."></textarea>
+                        </div>
+                        <div class="form-field full-width">
+                            <label>Link (opsional)</label>
+                            <input type="url" id="inp-link" placeholder="https://...">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-simpan-layanan font-montserrat">
+                        <i class="fas fa-save"></i> Simpan ke Database
+                    </button>
+                </form>
+            </div>
+
+            <!-- List Data -->
+            <div class="paper-card-admin">
+                <div class="card-section-title font-amidone">
+                    <i class="fas fa-list"></i>
+                    Data Tersimpan
+                    <span class="title-badge" id="badge-jumlah-layanan">0 item</span>
+                </div>
+
+                <div class="layanan-filter-tabs">
+                    <button class="btn-filter-layanan active" data-kategori="beasiswa">Beasiswa</button>
+                    <button class="btn-filter-layanan" data-kategori="lomba">Lomba</button>
+                    <button class="btn-filter-layanan" data-kategori="magang">Magang</button>
+                </div>
+
+                <div id="list-layanan-admin">
+                    <p class="font-montserrat" style="color:#94A3B8; padding:20px 0;">Memuat data...</p>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- ============================================================
+             PANEL 6: KELOLA BERITA (Kabar Himpunan)
+        ============================================================ -->
+        <div class="admin-panel" id="panel-berita">
+
+            <!-- Form Tambah Berita -->
+            <div class="paper-card-admin">
+                <div class="card-section-title font-amidone">
+                    <i class="fas fa-plus-circle"></i>
+                    Tambah Berita Baru
+                </div>
+                <form id="form-tambah-berita">
+                    <div class="berita-form-grid">
+                        <div class="form-field full-width">
+                            <label>Judul Berita</label>
+                            <input type="text" id="b-judul" required placeholder="Contoh: Verenigen 9.0">
+                        </div>
+                        <div class="form-field full-width">
+                            <label>Kutipan Singkat</label>
+                            <input type="text" id="b-kutipan" required placeholder="Ringkasan 1-2 kalimat untuk ditampilkan di halaman berita">
+                        </div>
+                        <div class="form-field full-width">
+                            <label>Isi Berita Lengkap</label>
+                            <textarea id="b-konten" rows="5" required placeholder="Tulis isi berita lengkap di sini..."></textarea>
+                        </div>
+                        <div class="form-field full-width">
+                            <label>URL Foto (opsional)</label>
+                            <input type="url" id="b-foto" placeholder="https://... (link gambar dari Google Drive, Imgur, dll)"
+                                oninput="prevBeritaFoto(this.value)">
+                            <div class="foto-preview-wrap">
+                                <img id="preview-foto-berita" src="" alt="preview">
+                            </div>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-simpan-layanan font-montserrat">
+                        <i class="fas fa-save"></i> Simpan Berita
+                    </button>
+                </form>
+            </div>
+
+            <!-- List Berita -->
+            <div class="paper-card-admin">
+                <div class="card-section-title font-amidone">
+                    <i class="fas fa-list"></i>
+                    Daftar Berita
+                    <span class="title-badge" id="badge-jumlah-berita">0 berita</span>
+                </div>
+                <div id="list-berita-admin">
+                    <p class="font-montserrat" style="color:#94A3B8; padding:20px 0;">Memuat data...</p>
+                </div>
+            </div>
+
+        </div>
+
+    </main><!-- /.admin-main -->
+</div><!-- /.admin-shell -->
+
+
+<script>
+    /* ================================================================
+       JAVASCRIPT ADMIN DASHBOARD
+       Semua logic tab, aspirasi, sidebar, clock, dan stub Firebase
+    ================================================================ */
+
+    // ----------------------------------------------------------------
+    // 1. LIVE CLOCK
+    // ----------------------------------------------------------------
+    function updateClock() {
+        const now = new Date();
+        const opts = { weekday:'short', day:'numeric', month:'short', hour:'2-digit', minute:'2-digit' };
+        document.getElementById('topbar-datetime').textContent =
+            now.toLocaleDateString('id-ID', opts).replace(',', ' •');
+    }
+    updateClock();
+    setInterval(updateClock, 60000);
+
+    // ----------------------------------------------------------------
+    // 2. TAB / PANEL SYSTEM
+    // ----------------------------------------------------------------
+    const panelMeta = {
+        'panel-ringkasan': { title: 'Ringkasan',        sub: 'Selamat datang di Pusat Kendali Admin HIMATEKINS ITS' },
+        'panel-aspirasi':  { title: 'Kotak Aspirasi',   sub: 'Baca dan kelola aspirasi yang dikirim mahasiswa' },
+        'panel-pintasan':  { title: 'Pintasan Konten',  sub: 'Akses cepat halaman manajemen konten website' },
+        'panel-layanan':   { title: 'Kelola Layanan',   sub: 'Tambah dan hapus info Beasiswa, Lomba, dan Magang' },
+        'panel-berita':    { title: 'Kelola Berita',    sub: 'Tambah dan hapus berita & rilis di halaman Kabar Himpunan' },
+        'panel-pengaturan':{ title: 'Pengaturan',       sub: 'Konfigurasi sistem dan pengaturan akun admin' },
+    };
+
+    document.querySelectorAll('.nav-item[data-target]').forEach(btn => {
+        btn.addEventListener('click', function () {
+            const targetId = this.dataset.target;
+
+            // Update active nav
+            document.querySelectorAll('.nav-item[data-target]').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+
+            // Switch panel
+            document.querySelectorAll('.admin-panel').forEach(p => p.classList.remove('active'));
+            const target = document.getElementById(targetId);
+            if (target) target.classList.add('active');
+
+            // Update topbar text
+            const meta = panelMeta[targetId];
+            if (meta) {
+                document.getElementById('topbar-heading').textContent = meta.title;
+                document.getElementById('topbar-sub').textContent = meta.sub;
+            }
+
+            // Tutup sidebar di mobile setelah pilih menu
+            if (window.innerWidth < 900) closeSidebar();
+        });
+    });
+
+    // ----------------------------------------------------------------
+    // 3. MOBILE SIDEBAR TOGGLE
+    // ----------------------------------------------------------------
+    const sidebar = document.getElementById('admin-sidebar');
+    const overlay = document.getElementById('sidebar-overlay');
+
+    document.getElementById('sidebar-toggle').addEventListener('click', () => {
+        sidebar.classList.toggle('open');
+        overlay.classList.toggle('visible');
+    });
+
+    overlay.addEventListener('click', closeSidebar);
+
+    function closeSidebar() {
+        sidebar.classList.remove('open');
+        overlay.classList.remove('visible');
+    }
+
+    // ----------------------------------------------------------------
+    // 4. KOTAK ASPIRASI — logic dipindah ke Firebase module di bawah
+    // ----------------------------------------------------------------
+
+    // Preview foto berita saat URL diketik
+    function prevBeritaFoto(url) {
+        const img = document.getElementById('preview-foto-berita');
+        if (!img) return;
+        if (url && url.startsWith('http')) {
+            img.src = url;
+            img.style.display = 'block';
+            img.onerror = () => { img.style.display = 'none'; };
+        } else {
+            img.style.display = 'none';
+        }
+    }
+
+    function updateBadgeCounts(belum) {
+        const badgeEl    = document.getElementById('badge-aspirasi');
+        const statEl     = document.getElementById('stat-asp-belum');
+        const aspCountEl = document.getElementById('asp-count-badge');
+        if (badgeEl)    { badgeEl.textContent = belum > 0 ? belum : ''; badgeEl.style.display = belum > 0 ? 'inline-block' : 'none'; }
+        if (statEl)     statEl.textContent  = belum;
+        if (aspCountEl) aspCountEl.textContent = belum + ' Belum Dibaca';
+    }
+
+    // Search filter (bekerja pada DOM yang dirender Firestore)
+    document.getElementById('asp-search').addEventListener('input', function () {
+        const q = this.value.toLowerCase();
+        document.querySelectorAll('.asp-card').forEach(card => {
+            const text  = card.querySelector('.asp-text')?.textContent.toLowerCase() || '';
+            const name  = card.querySelector('.asp-name')?.textContent.toLowerCase() || '';
+            card.style.display = (text.includes(q) || name.includes(q)) ? '' : 'none';
+        });
+    });
+
+    document.getElementById('btn-filter-all').addEventListener('click', () => {
+        document.querySelectorAll('.asp-card').forEach(c => c.style.display = '');
+    });
+
+    document.getElementById('btn-filter-unread').addEventListener('click', () => {
+        document.querySelectorAll('.asp-card').forEach(card => {
+            card.style.display = card.dataset.status === 'pending' ? '' : 'none';
+        });
+    });
+
+    // ================================================================
+    // 5. FIREBASE AUTH — Proteksi halaman & info user
+    // ================================================================
+    // (dihandle di module script di bawah)
+
+</script>
+
+<!--
+    Script Firebase HARUS type="module" dan diletakkan terpisah
+    karena menggunakan import/export ES Module
+-->
+<script type="module">
+    import { onAuthStateChanged, signOut }
+        from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+    import {
+        collection, addDoc, getDocs, deleteDoc, doc, serverTimestamp, query, orderBy, updateDoc
+    } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+    import { auth, db } from "./firebase-config.js";
+
+    // ── A. Cek login ─────────────────────────────────────────────
+    onAuthStateChanged(auth, (user) => {
+        if (!user) {
+            window.location.href = "login.html";
+        } else {
+            const nameEl  = document.getElementById('sidebar-admin-name');
+            const emailEl = document.getElementById('settings-email');
+            if (nameEl)  nameEl.textContent  = user.displayName || user.email;
+            if (emailEl) emailEl.textContent = user.email;
+
+            // Muat aspirasi setelah login terverifikasi
+            muatAspirasi();
+            updateStatBerita();
+        }
+    });
+
+    // ── B. Logout ─────────────────────────────────────────────────
+    document.getElementById('btn-logout').addEventListener('click', async () => {
+        if (confirm('Yakin ingin keluar dari dashboard admin?')) {
+            await signOut(auth);
+            window.location.href = "login.html";
+        }
+    });
+
+    // ================================================================
+    // FIRESTORE — Aspirasi Real-time
+    // Koleksi: "aspirasi" → { nama, email, pesan, lampiran, status, createdAt }
+    // ================================================================
+
+    function formatWaktu(ts) {
+        if (!ts) return '—';
+        const d = ts.toDate ? ts.toDate() : new Date(ts);
+        const now = new Date();
+        const diffMs = now - d;
+        const diffH  = diffMs / 3600000;
+        const diffD  = diffMs / 86400000;
+
+        const jam = d.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+        if (diffH < 24)   return `Hari ini, ${jam}`;
+        if (diffD < 2)    return `Kemarin, ${jam}`;
+        return `${Math.floor(diffD)} hari lalu, ${jam}`;
+    }
+
+    function buatKartuAspirasi(id, data) {
+        const isAnon   = !data.nama || data.nama.toLowerCase() === 'anonim';
+        const isDone   = data.status === 'done';
+        const avatarIcon = isAnon ? 'fa-user-secret' : 'fa-user';
+        const emailTeks  = isAnon ? '— Nama disembunyikan —' : (data.email || '—');
+
+        return `
+        <div class="asp-card ${isDone ? 'asp-done' : ''}" data-status="${data.status || 'pending'}" data-id="${id}">
+            <div class="asp-card-header">
+                <div class="asp-avatar"><i class="fas ${avatarIcon}"></i></div>
+                <div class="asp-sender">
+                    <span class="asp-name">${data.nama || 'Anonim'}</span>
+                    <span class="asp-email">${emailTeks}</span>
+                </div>
+                <span class="asp-timestamp">${formatWaktu(data.createdAt)}</span>
+                <div class="asp-status-dot ${isDone ? 'done' : ''}" id="dot-${id}"></div>
+            </div>
+            <p class="asp-text font-montserrat">"${data.pesan || ''}"</p>
+            <div class="asp-card-footer">
+                ${data.lampiran ? `
+                <span class="asp-file-chip font-montserrat">
+                    <i class="fas fa-paperclip"></i> ${data.lampiran}
+                </span>` : ''}
+                <div class="asp-action-group" ${!data.lampiran ? 'style="margin-left:0;"' : ''}>
+                    <button class="asp-btn btn-done font-montserrat ${isDone ? 'is-done' : ''}"
+                        onclick="window._tandaiSelesai('${id}')" ${isDone ? 'disabled' : ''}>
+                        <i class="fas ${isDone ? 'fa-check-double' : 'fa-check'}"></i>
+                        ${isDone ? 'Selesai' : 'Tandai Selesai'}
+                    </button>
+                    <button class="asp-btn btn-delete font-montserrat" onclick="window._hapusAspirasi('${id}')">
+                        <i class="fas fa-trash"></i> Hapus
+                    </button>
+                </div>
+            </div>
+        </div>`;
+    }
+
+    async function muatAspirasi() {
+        const aspList = document.getElementById('asp-list');
+        aspList.innerHTML = `<p class="font-montserrat" style="color:#94A3B8;text-align:center;padding:30px 0;">
+            <i class="fas fa-spinner fa-spin" style="font-size:1.5rem;display:block;margin-bottom:10px;"></i>
+            Memuat aspirasi...</p>`;
+
+        try {
+            const q    = query(collection(db, 'aspirasi'), orderBy('createdAt', 'desc'));
+            const snap = await getDocs(q);
+
+            if (snap.empty) {
+                aspList.innerHTML = `<div class="empty-state">
+                    <i class="fas fa-inbox"></i>
+                    <p>Belum ada aspirasi masuk.</p>
+                </div>`;
+                updateBadgeCounts(0);
+                return;
+            }
+
+            let html   = '';
+            let belum  = 0;
+            snap.forEach(d => {
+                if ((d.data().status || 'pending') === 'pending') belum++;
+                html += buatKartuAspirasi(d.id, d.data());
+            });
+
+            aspList.innerHTML = html;
+            updateBadgeCounts(belum);
+
+        } catch (err) {
+            console.error('Gagal muat aspirasi:', err);
+            aspList.innerHTML = `<p style="color:#E11D48;font-family:Montserrat,sans-serif;font-size:0.85rem;padding:20px 0;">
+                Gagal memuat data: ${err.message}</p>`;
+        }
+    }
+
+    // ── Tandai Selesai ────────────────────────────────────────────
+    window._tandaiSelesai = async (id) => {
+        try {
+            const { updateDoc, doc: fsDoc } = await import(
+                "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js"
+            );
+            await updateDoc(fsDoc(db, 'aspirasi', id), { status: 'done' });
+
+            // Update UI langsung tanpa re-fetch
+            const card = document.querySelector(`.asp-card[data-id="${id}"]`);
+            if (card) {
+                card.dataset.status = 'done';
+                card.classList.add('asp-done');
+                const dot = document.getElementById('dot-' + id);
+                if (dot) dot.classList.add('done');
+                const btn = card.querySelector('.btn-done');
+                if (btn) {
+                    btn.innerHTML = '<i class="fas fa-check-double"></i> Selesai';
+                    btn.classList.add('is-done');
+                    btn.disabled = true;
+                }
+            }
+
+            // Hitung ulang badge
+            const belum = document.querySelectorAll('.asp-card[data-status="pending"]').length;
+            updateBadgeCounts(belum);
+
+        } catch (err) {
+            alert('Gagal memperbarui status: ' + err.message);
+        }
+    };
+
+    // ── Hapus Aspirasi ────────────────────────────────────────────
+    window._hapusAspirasi = async (id) => {
+        if (!confirm('Yakin ingin menghapus aspirasi ini?')) return;
+        try {
+            await deleteDoc(doc(db, 'aspirasi', id));
+
+            const card = document.querySelector(`.asp-card[data-id="${id}"]`);
+            if (card) {
+                card.style.transition = 'opacity 0.3s, transform 0.3s';
+                card.style.opacity = '0';
+                card.style.transform = 'translateX(20px)';
+                setTimeout(() => {
+                    card.remove();
+                    const belum = document.querySelectorAll('.asp-card[data-status="pending"]').length;
+                    updateBadgeCounts(belum);
+
+                    if (!document.querySelector('.asp-card')) {
+                        document.getElementById('asp-list').innerHTML = `
+                            <div class="empty-state">
+                                <i class="fas fa-inbox"></i>
+                                <p>Tidak ada aspirasi masuk saat ini.</p>
+                            </div>`;
+                    }
+                }, 300);
+            }
+        } catch (err) {
+            alert('Gagal menghapus: ' + err.message);
+        }
+    };
+
+    // ================================================================
+    // 6. FIRESTORE — Kelola Layanan (Beasiswa, Lomba, Magang)
+    // Koleksi: "layanan" → { judul, deskripsi, link, kategori, createdAt }
+    // ================================================================
+
+    const formLayanan  = document.getElementById('form-tambah-layanan');
+    const listLayanan  = document.getElementById('list-layanan-admin');
+    const filterBtns   = document.querySelectorAll('.btn-filter-layanan');
+
+    let kategoriAktif = 'beasiswa';
+
+    // ── Render satu kartu ─────────────────────────────────────────
+    function buatKartuLayanan(id, data) {
+        const kat = (data.kategori || '').toLowerCase();
+        return `
+        <div class="layanan-admin-card" id="card-${id}">
+            <div class="lac-info">
+                <span class="lac-badge lac-badge--${kat}">${kat.toUpperCase()}</span>
+                <h4 class="lac-judul font-amidone">${data.judul || '—'}</h4>
+                <p class="lac-desc font-montserrat">${data.deskripsi || ''}</p>
+                ${data.link ? `<a href="${data.link}" target="_blank" class="lac-link font-montserrat"><i class="fas fa-external-link-alt"></i> ${data.link}</a>` : ''}
+            </div>
+            <button class="lac-hapus" onclick="hapusLayanan('${id}')">
+                <i class="fas fa-trash"></i>
+            </button>
+        </div>`;
+    }
+
+    // ── Hitung total semua layanan untuk stat card ────────────────
+    async function updateStatLayanan() {
+        try {
+            const snap = await getDocs(collection(db, 'layanan'));
+            const total = snap.size;
+            const el = document.getElementById('stat-layanan-aktif');
+            if (el) el.textContent = total;
+        } catch(e) {}
+    }
+
+    // ── Muat data per kategori ────────────────────────────────────
+    async function muatLayanan(kategori) {
+        listLayanan.innerHTML = '<p class="font-montserrat" style="color:#94A3B8;padding:20px 0">Memuat...</p>';
+        try {
+            const q = query(collection(db, 'layanan'), orderBy('createdAt', 'desc'));
+            const snap = await getDocs(q);
+            const items = [];
+            snap.forEach(d => {
+                if ((d.data().kategori || '').toLowerCase() === kategori) {
+                    items.push(buatKartuLayanan(d.id, d.data()));
+                }
+            });
+
+            // Update badge jumlah
+            const badge = document.getElementById('badge-jumlah-layanan');
+            if (badge) badge.textContent = items.length + ' item';
+
+            listLayanan.innerHTML = items.length
+                ? items.join('')
+                : '<p class="font-montserrat" style="color:#94A3B8;padding:20px 0">Belum ada data untuk kategori ini. Tambahkan di atas.</p>';
+        } catch (e) {
+            listLayanan.innerHTML = '<p style="color:#E11D48;font-family:Montserrat,sans-serif;font-size:0.85rem;">Gagal memuat data: ' + e.message + '</p>';
+        }
+        updateStatLayanan();
+    }
+
+    // ── Hapus dokumen ─────────────────────────────────────────────
+    window.hapusLayanan = async (id) => {
+        if (!confirm('Hapus item ini?')) return;
+        try {
+            await deleteDoc(doc(db, 'layanan', id));
+            const el = document.getElementById('card-' + id);
+            if (el) el.remove();
+            updateStatLayanan();
+        } catch (e) { alert('Gagal menghapus: ' + e.message); }
+    };
+
+    // ── Submit form tambah ────────────────────────────────────────
+    if (formLayanan) {
+        formLayanan.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = formLayanan.querySelector('.btn-simpan-layanan');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Menyimpan...';
+            btn.disabled = true;
+
+            const kategori = document.getElementById('inp-kategori').value.toLowerCase();
+
+            try {
+                await addDoc(collection(db, 'layanan'), {
+                    judul:      document.getElementById('inp-judul').value.trim(),
+                    deskripsi:  document.getElementById('inp-deskripsi').value.trim(),
+                    link:       document.getElementById('inp-link').value.trim(),
+                    kategori:   kategori,
+                    createdAt:  serverTimestamp()
+                });
+                formLayanan.reset();
+                // Set kembali kategori sesuai tab aktif
+                document.getElementById('inp-kategori').value = kategoriAktif;
+                muatLayanan(kategoriAktif);
+            } catch (e) {
+                alert('Gagal menyimpan: ' + e.message);
+            }
+
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+        });
+    }
+
+    // ── Filter tab ────────────────────────────────────────────────
+    filterBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            filterBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            kategoriAktif = btn.dataset.kategori;
+            const selKat = document.getElementById('inp-kategori');
+            if (selKat) selKat.value = kategoriAktif;
+            muatLayanan(kategoriAktif);
+        });
+    });
+
+    // ── Init ──────────────────────────────────────────────────────
+    muatLayanan(kategoriAktif);
+    updateStatLayanan();
+
+    // ================================================================
+    // 7. FIRESTORE — Kelola Berita (Kabar Himpunan)
+    // Koleksi: "berita" → { judul, kutipan, konten, urlFoto, createdAt }
+    // ================================================================
+
+    async function updateStatBerita() {
+        try {
+            const snap = await getDocs(collection(db, 'berita'));
+            const el = document.getElementById('stat-total-berita');
+            if (el) el.textContent = snap.size;
+            const badge = document.getElementById('badge-jumlah-berita');
+            if (badge) badge.textContent = snap.size + ' berita';
+        } catch(e) {}
+    }
+
+    function formatTgl(ts) {
+        if (!ts) return '';
+        const d = ts.toDate ? ts.toDate() : new Date(ts);
+        return d.toLocaleDateString('id-ID', { day:'numeric', month:'long', year:'numeric' });
+    }
+
+    function buatKartuBerita(id, data) {
+        const fotoHtml = data.urlFoto
+            ? `<div class="bac-foto"><img src="${data.urlFoto}" alt="foto" onerror="this.parentElement.innerHTML='<i class=\\'fas fa-image\\'></i>'"></div>`
+            : `<div class="bac-foto"><i class="fas fa-image"></i></div>`;
+        return `
+        <div class="berita-admin-card" id="bcard-${id}">
+            ${fotoHtml}
+            <div class="bac-info">
+                <h4 class="bac-judul font-amidone">${data.judul || '—'}</h4>
+                <p class="bac-kutipan font-montserrat">${data.kutipan || ''}</p>
+                <span class="bac-tanggal font-montserrat"><i class="fas fa-calendar-alt"></i> ${formatTgl(data.createdAt)}</span>
+            </div>
+            <button class="bac-hapus" onclick="hapusBerita('${id}')">
+                <i class="fas fa-trash"></i>
+            </button>
+        </div>`;
+    }
+
+    async function muatBerita() {
+        const listEl = document.getElementById('list-berita-admin');
+        if (!listEl) return;
+        listEl.innerHTML = '<p class="font-montserrat" style="color:#94A3B8;padding:20px 0">Memuat...</p>';
+        try {
+            const q = query(collection(db, 'berita'), orderBy('createdAt', 'desc'));
+            const snap = await getDocs(q);
+            if (snap.empty) {
+                listEl.innerHTML = '<p class="font-montserrat" style="color:#94A3B8;padding:20px 0">Belum ada berita. Tambahkan di atas.</p>';
+            } else {
+                let html = '';
+                snap.forEach(d => { html += buatKartuBerita(d.id, d.data()); });
+                listEl.innerHTML = html;
+            }
+        } catch(e) {
+            listEl.innerHTML = `<p style="color:#E11D48;font-family:Montserrat,sans-serif;font-size:0.85rem;">Gagal memuat: ${e.message}</p>`;
+        }
+        updateStatBerita();
+    }
+
+    window.hapusBerita = async (id) => {
+        if (!confirm('Hapus berita ini?')) return;
+        try {
+            await deleteDoc(doc(db, 'berita', id));
+            const el = document.getElementById('bcard-' + id);
+            if (el) {
+                el.style.transition = 'opacity 0.3s, transform 0.3s';
+                el.style.opacity = '0';
+                el.style.transform = 'translateX(20px)';
+                setTimeout(() => { el.remove(); updateStatBerita(); }, 300);
+            }
+        } catch(e) { alert('Gagal menghapus: ' + e.message); }
+    };
+
+    const formBerita = document.getElementById('form-tambah-berita');
+    if (formBerita) {
+        formBerita.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = formBerita.querySelector('.btn-simpan-layanan');
+            const orig = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Menyimpan...';
+            btn.disabled = true;
+            try {
+                await addDoc(collection(db, 'berita'), {
+                    judul:    document.getElementById('b-judul').value.trim(),
+                    kutipan:  document.getElementById('b-kutipan').value.trim(),
+                    konten:   document.getElementById('b-konten').value.trim(),
+                    urlFoto:  document.getElementById('b-foto').value.trim(),
+                    createdAt: serverTimestamp()
+                });
+                formBerita.reset();
+                const prev = document.getElementById('preview-foto-berita');
+                if (prev) prev.style.display = 'none';
+                muatBerita();
+            } catch(e) { alert('Gagal menyimpan: ' + e.message); }
+            btn.innerHTML = orig;
+            btn.disabled = false;
+        });
+    }
+
+    // Muat berita saat panel dibuka
+    document.querySelector('[data-target="panel-berita"]')?.addEventListener('click', () => {
+        muatBerita();
+    });
+
+    // Init stat
+    updateStatBerita();
+
+</script>
+</body>
+</html>
