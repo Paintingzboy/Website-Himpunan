@@ -1802,6 +1802,14 @@
                                 <img id="preview-foto-berita" src="" alt="preview">
                             </div>
                         </div>
+                        <div class="form-field full-width">
+                            <label>Upload Foto (opsional)</label>
+                            <input type="file" id="b-file" accept="image/*" onchange="prevBeritaFile(this.files)">
+                            <div class="foto-preview-wrap">
+                                <img id="preview-foto-file" src="" alt="preview-file">
+                            </div>
+                            <small class="font-montserrat" style="color:#64748B;display:block;margin-top:6px;">Jika Anda mengunggah file, itu akan digunakan sebagai foto utama; URL akan diabaikan.</small>
+                        </div>
                     </div>
                     <button type="submit" class="btn-simpan-layanan font-montserrat">
                         <i class="fas fa-save"></i> Simpan Berita
@@ -1904,17 +1912,60 @@
     // 4. KOTAK ASPIRASI — logic dipindah ke Firebase module di bawah
     // ----------------------------------------------------------------
 
+    // Normalize preview links for Google Drive / Imgur before rendering
+    function normalizePreviewImageUrl(url) {
+        if (!url || typeof url !== 'string') return url;
+        const u = url.trim();
+        if (!u) return u;
+
+        try {
+            const driveMatch = u.match(/\/file\/d\/([a-zA-Z0-9_-]+)/) || u.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+            if (u.includes('drive.google.com') && driveMatch && driveMatch[1]) {
+                return 'https://drive.google.com/uc?export=view&id=' + driveMatch[1];
+            }
+        } catch (e) { /* ignore */ }
+
+        try {
+            const imgurMatch = u.match(/^https?:\/\/(?:www\.)?imgur\.com\/(?:gallery\/|a\/)?([a-zA-Z0-9]+)(?:\.(png|jpe?g|gif|gifv|webp))?/i);
+            if (imgurMatch && imgurMatch[1]) {
+                const ext = imgurMatch[2] ? imgurMatch[2].toLowerCase().replace('gifv', 'gif') : 'jpg';
+                return `https://i.imgur.com/${imgurMatch[1]}.${ext}`;
+            }
+        } catch (e) { /* ignore */ }
+
+        return u;
+    }
+
     // Preview foto berita saat URL diketik
     function prevBeritaFoto(url) {
         const img = document.getElementById('preview-foto-berita');
+        const filePrev = document.getElementById('preview-foto-file');
+        if (filePrev) filePrev.style.display = 'none';
         if (!img) return;
-        if (url && url.startsWith('http')) {
-            img.src = url;
+        const normalized = normalizePreviewImageUrl(url);
+        if (normalized && normalized.startsWith('http')) {
+            img.src = normalized;
             img.style.display = 'block';
             img.onerror = () => { img.style.display = 'none'; };
         } else {
             img.style.display = 'none';
         }
+    }
+
+    // Preview ketika admin memilih file lokal
+    function prevBeritaFile(files) {
+        const img = document.getElementById('preview-foto-file');
+        const urlPrev = document.getElementById('preview-foto-berita');
+        if (urlPrev) urlPrev.style.display = 'none';
+        if (!img) return;
+        if (!files || !files[0]) { img.style.display = 'none'; return; }
+        const file = files[0];
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            img.src = e.target.result;
+            img.style.display = 'block';
+        };
+        reader.readAsDataURL(file);
     }
 
     function updateBadgeCounts(belum) {
@@ -1963,6 +2014,7 @@
     import {
         collection, addDoc, getDocs, deleteDoc, doc, serverTimestamp, query, orderBy, updateDoc
     } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+    import { getStorage, ref as sRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js";
     import { auth, db } from "./firebase-config.js";
 
     // ── A. Cek login ─────────────────────────────────────────────
@@ -2348,16 +2400,30 @@
             btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Menyimpan...';
             btn.disabled = true;
             try {
+                // Prioritaskan file upload jika ada, jika tidak gunakan URL yang dimasukkan
+                let finalFotoUrl = document.getElementById('b-foto').value.trim() || '';
+                const fileInput = document.getElementById('b-file');
+                if (fileInput && fileInput.files && fileInput.files[0]) {
+                    const file = fileInput.files[0];
+                    const storage = getStorage();
+                    const path = `berita/${Date.now()}_${file.name.replace(/[^a-zA-Z0-9_.-]/g,'_')}`;
+                    const ref = sRef(storage, path);
+                    await uploadBytes(ref, file);
+                    finalFotoUrl = await getDownloadURL(ref);
+                }
+
                 await addDoc(collection(db, 'berita'), {
                     judul:    document.getElementById('b-judul').value.trim(),
                     kutipan:  document.getElementById('b-kutipan').value.trim(),
                     konten:   document.getElementById('b-konten').value.trim(),
-                    urlFoto:  document.getElementById('b-foto').value.trim(),
+                    urlFoto:  finalFotoUrl,
                     createdAt: serverTimestamp()
                 });
                 formBerita.reset();
                 const prev = document.getElementById('preview-foto-berita');
                 if (prev) prev.style.display = 'none';
+                const prevf = document.getElementById('preview-foto-file');
+                if (prevf) prevf.style.display = 'none';
                 muatBerita();
             } catch(e) { alert('Gagal menyimpan: ' + e.message); }
             btn.innerHTML = orig;
