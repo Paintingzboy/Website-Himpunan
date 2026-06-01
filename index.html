@@ -63,6 +63,7 @@
                     </ul>
                 </li>
                 <li><a href="#aspirasi">Aspirasi</a></li>
+                <li><a href="login.html" class="nav-admin-btn"><i class="fas fa-lock"></i> Admin</a></li>
             </ul>
         </div>
     </nav>
@@ -299,7 +300,7 @@
                 <p class="aspirasi-subtitle font-montserrat">ASPIRASI</p>
                 <h2 class="font-amidone aspirasi-heading">Sampaikan<br>Suara Anda</h2>
 
-                <form class="aspirasi-glass-form" onsubmit="handleAspirasi(event)">
+                <form class="aspirasi-glass-form">
                     <div class="aspirasi-field">
                         <label class="font-montserrat asp-label" for="asp-nama">Nama Lengkap</label>
                         <input class="asp-input" type="text" id="asp-nama" placeholder="Nama Lengkap" required>
@@ -364,20 +365,62 @@
                 setTimeout(() => el.classList.add('anim-visible'), parseInt(el.dataset.delay || 0));
             });
         });
+    </script>
 
-        // Aspirasi form
-        function handleAspirasi(e) {
+    <!-- Firebase: kirim aspirasi ke Firestore -->
+    <script type="module">
+        import {
+            collection, addDoc, serverTimestamp
+        } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+        import { db } from "./firebase-config.js";
+
+        document.querySelector('.aspirasi-glass-form').addEventListener('submit', async function(e) {
             e.preventDefault();
-            const btn = e.target.querySelector('.aspirasi-submit-btn');
-            btn.innerHTML = '<i class="fas fa-check"></i> Terima kasih!';
-            btn.style.background = '#28a745';
-            setTimeout(() => {
+            const btn = this.querySelector('.aspirasi-submit-btn');
+
+            const nama   = document.getElementById('asp-nama').value.trim();
+            const email  = document.getElementById('asp-email').value.trim();
+            const pesan  = document.getElementById('asp-pesan').value.trim();
+            const fileInput = this.querySelector('input[type="file"]');
+            const namaFile  = fileInput.files[0]?.name || '';
+
+            // Validasi email ITS (opsional, bisa dihapus jika ingin lebih longgar)
+            if (!email.endsWith('@mhs.its.ac.id') && !email.endsWith('@its.ac.id') && !email.endsWith('@student.its.ac.id')) {
+                alert('Gunakan email mahasiswa ITS (@mhs.its.ac.id atau @student.its.ac.id)');
+                return;
+            }
+
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Mengirim...';
+            btn.disabled = true;
+
+            try {
+                await addDoc(collection(db, 'aspirasi'), {
+                    nama:       nama,
+                    email:      email,
+                    pesan:      pesan,
+                    lampiran:   namaFile,
+                    status:     'pending',
+                    createdAt:  serverTimestamp()
+                });
+
+                btn.innerHTML = '<i class="fas fa-check"></i> Terima kasih!';
+                btn.style.background = '#28a745';
+
+                setTimeout(() => {
+                    btn.innerHTML = '<i class="fas fa-paper-plane"></i> Kirim Suara Saya';
+                    btn.style.background = '';
+                    btn.disabled = false;
+                    e.target.reset();
+                    document.getElementById('file-name-display').textContent = 'Tidak ada file dipilih';
+                }, 3000);
+
+            } catch (err) {
+                console.error('Gagal kirim aspirasi:', err);
+                alert('Gagal mengirim. Coba lagi atau hubungi admin.');
                 btn.innerHTML = '<i class="fas fa-paper-plane"></i> Kirim Suara Saya';
-                btn.style.background = '';
-                e.target.reset();
-                document.getElementById('file-name-display').textContent = 'Tidak ada file dipilih';
-            }, 3000);
-        }
+                btn.disabled = false;
+            }
+        });
     </script>
 
 </body>
