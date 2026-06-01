@@ -1928,3 +1928,462 @@ footer p {
     .aspirasi-title { font-size: 1.8rem; }
     .cm-corner { width: 40px; height: 40px; }
 }
+/* ==========================================================================
+   KABAR HIMPUNAN PAGE
+   ========================================================================== */
+
+/* Hero */
+.kabar-hero {
+    background: linear-gradient(135deg, #00213A 0%, #00395C 50%, #005C8A 100%),
+                url('Assets/Background Kabar.png');
+    background-blend-mode: multiply;
+    background-size: cover;
+    background-position: center top;
+    min-height: 520px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 160px 20px 80px;
+    position: relative;
+    overflow: hidden;
+}
+
+.kabar-hero-overlay {
+    position: absolute;
+    inset: 0;
+    background-image:
+        linear-gradient(rgba(255,255,255,0.07) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,0.8) 0%, transparent 100%);
+    mask-image: linear-gradient(to bottom, rgba(0,0,0,0.8) 0%, transparent 100%);
+}
+
+.kabar-hero-content {
+    position: relative;
+    z-index: 2;
+}
+
+.kabar-hero h1 {
+    font-size: 4rem;
+    color: #FFFFFF;
+    line-height: 1.05;
+    margin-bottom: 18px;
+    text-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+
+.kabar-highlight {
+    display: inline-block;
+    background: #0179C2;
+    color: #FFFFFF;
+    padding: 2px 18px 6px;
+    border-radius: 6px;
+}
+
+.kabar-hero p {
+    font-size: 1rem;
+    color: rgba(255,255,255,0.8);
+    max-width: 520px;
+    margin: 0 auto;
+    line-height: 1.7;
+}
+
+/* Main layout */
+.kabar-main {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 20px 60px;
+}
+
+/* Shared container */
+.kabar-container {
+    background: #F8FAFC;
+    border-radius: 40px;
+    padding: 50px;
+    margin-bottom: 30px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.18);
+}
+
+.kabar-container-dark {
+    background: linear-gradient(160deg, #00395C 0%, #014f80 60%, #0179C2 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+.kabar-container-dark::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+        linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+}
+
+.kabar-section-title {
+    color: #072B4D;
+    font-size: 1.9rem;
+    text-align: center;
+    margin-bottom: 40px;
+    font-weight: 700;
+}
+
+.kabar-title-light {
+    color: #FFFFFF;
+}
+
+/* ---- BERITA ITEMS ---- */
+.berita-item {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    align-items: center;
+    margin-bottom: 35px;
+    padding-bottom: 35px;
+    border-bottom: 1px solid rgba(0,57,92,0.1);
+}
+
+.berita-item:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.berita-text-left { direction: ltr; }
+.berita-foto-left { direction: rtl; }
+.berita-foto-left > * { direction: ltr; }
+
+.berita-judul {
+    font-size: 1.7rem;
+    color: #072B4D;
+    margin-bottom: 12px;
+    line-height: 1.2;
+}
+
+.berita-kutipan {
+    font-size: 0.9rem;
+    color: #555;
+    line-height: 1.7;
+    margin-bottom: 16px;
+}
+
+.berita-readmore {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #0179C2;
+    font-size: 0.88rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: gap 0.2s ease, color 0.2s ease;
+}
+
+.berita-readmore:hover {
+    color: #00395C;
+    gap: 12px;
+}
+
+.berita-foto-col {
+    width: 100%;
+}
+
+.berita-foto-placeholder {
+    width: 100%;
+    aspect-ratio: 4/3;
+    background: #F0F4F8;
+    border-radius: 20px;
+    border: 2.5px solid #0179C2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #0179C2;
+    box-shadow: 0 6px 20px rgba(1,121,194,0.12);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.berita-foto-placeholder:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 30px rgba(1,121,194,0.2);
+}
+
+/* Foto yang diisi gambar asli */
+.berita-foto-placeholder img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 18px;
+}
+
+/* ---- DOKUMENTASI KEGIATAN ---- */
+.kabar-kegiatan-desc {
+    color: rgba(255,255,255,0.8);
+    text-align: center;
+    margin-bottom: 25px;
+    font-size: 0.95rem;
+    position: relative;
+    z-index: 1;
+}
+
+.kegiatan-link-wrap {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 35px;
+    position: relative;
+    z-index: 1;
+}
+
+.kegiatan-link-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 32px;
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(10px);
+    border: 1.5px solid rgba(255,255,255,0.35);
+    color: #FFFFFF;
+    border-radius: 14px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.kegiatan-link-btn:hover {
+    background: rgba(255,255,255,0.25);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+}
+
+.kegiatan-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    position: relative;
+    z-index: 1;
+}
+
+.kegiatan-foto-placeholder {
+    aspect-ratio: 4/3;
+    background: rgba(255,255,255,0.1);
+    backdrop-filter: blur(8px);
+    border-radius: 16px;
+    border: 1px solid rgba(255,255,255,0.2);
+    transition: all 0.25s ease;
+}
+
+.kegiatan-foto-placeholder:hover {
+    background: rgba(255,255,255,0.18);
+    transform: scale(1.02);
+}
+
+/* ==========================================================================
+   SOFTWARE SECTION (akademik.html)
+   ========================================================================== */
+.software-section h2 { margin-bottom: 10px; }
+
+.software-desc {
+    text-align: center;
+    color: #666;
+    font-size: 0.92rem;
+    margin-bottom: 30px;
+    line-height: 1.6;
+}
+
+.software-grid-wrap {
+    background: #F0EBE8;
+    border-radius: 20px;
+    padding: 30px;
+    margin-bottom: 30px;
+}
+
+.software-logos-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px 30px;
+    align-items: center;
+    justify-items: center;
+}
+
+.sw-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.sw-logo {
+    height: 70px;
+    width: auto;
+    max-width: 120px;
+    object-fit: contain;
+    filter: drop-shadow(0 2px 6px rgba(0,0,0,0.1));
+    transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+.sw-logo:hover {
+    transform: scale(1.08);
+    filter: drop-shadow(0 4px 12px rgba(0,0,0,0.18));
+}
+
+.sw-name {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: #333;
+    text-align: center;
+}
+
+.software-download-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+}
+
+.sw-download-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 40px;
+    background: #072B4D;
+    color: #FFFFFF;
+    border-radius: 14px;
+    font-size: 1rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 18px rgba(7,43,77,0.3);
+}
+
+.sw-download-btn:hover {
+    background: #0179C2;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(1,121,194,0.35);
+}
+
+.sw-link-text {
+    font-size: 0.75rem;
+    color: #888;
+    text-align: center;
+    word-break: break-all;
+}
+
+/* Responsive kabar + software */
+@media screen and (max-width: 768px) {
+    .kabar-hero h1 { font-size: 2.8rem; }
+    .kabar-container { padding: 30px 20px; border-radius: 25px; }
+    .berita-item { grid-template-columns: 1fr; gap: 20px; }
+    .berita-foto-left { direction: ltr; }
+    .kegiatan-grid { grid-template-columns: repeat(2, 1fr); }
+    .software-logos-grid { grid-template-columns: repeat(2, 1fr); gap: 20px; }
+    .sw-logo { height: 55px; }
+}
+
+@media screen and (max-width: 480px) {
+    .kabar-hero h1 { font-size: 2.2rem; }
+    .kabar-container { padding: 25px 15px; border-radius: 20px; }
+    .kegiatan-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .berita-judul { font-size: 1.4rem; }
+    .software-logos-grid { grid-template-columns: repeat(2, 1fr); gap: 15px; }
+    .sw-logo { height: 48px; }
+}
+
+/* ==========================================================================
+   PAGE HERO BADGE (Akademik, Layanan, Kabar subpages)
+   ========================================================================== */
+.page-hero-badge {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.page-hero-title-box {
+    background: #FFFFFF;
+    border-radius: 8px;
+    padding: 10px 32px;
+    display: inline-block;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+}
+
+.page-hero-title-box--blue {
+    background: #0179C2;
+    border-radius: 8px;
+}
+
+.page-hero-title-white {
+    font-size: 2.8rem;
+    color: #0179C2;
+    font-weight: bold;
+    letter-spacing: 2px;
+    line-height: 1;
+    display: block;
+}
+
+.page-hero-title-blue {
+    font-size: 2.8rem;
+    color: #FFFFFF;
+    font-weight: bold;
+    letter-spacing: 2px;
+    line-height: 1;
+    display: block;
+}
+
+.page-hero-subtitle {
+    font-size: 0.95rem;
+    color: rgba(255,255,255,0.82);
+    max-width: 500px;
+    margin: 0 auto;
+    line-height: 1.7;
+    text-align: center;
+}
+
+/* Override old h1 styles on subpages so they don't conflict */
+.akademik-hero h1,
+.layanan-hero h1,
+.kabar-hero h1 {
+    display: none;
+}
+
+/* Remove old kabar-highlight since no longer used */
+.kabar-highlight { display: none; }
+
+/* Responsive badge */
+@media screen and (max-width: 768px) {
+    .page-hero-title-white,
+    .page-hero-title-blue { font-size: 2.1rem; }
+    .page-hero-title-box { padding: 8px 24px; }
+}
+
+@media screen and (max-width: 480px) {
+    .page-hero-title-white,
+    .page-hero-title-blue { font-size: 1.75rem; letter-spacing: 1px; }
+    .page-hero-title-box { padding: 7px 18px; }
+}
+
+/* ==========================================================================
+   NAVBAR ASPIRASI BUTTON — glass style (all pages)
+   ========================================================================== */
+/* Override the old #aspirasi-only rule to work for all pages */
+.nav-links > li > a[href="#aspirasi"],
+.nav-links > li > a[href="index.html#aspirasi"] {
+    background: rgba(135, 206, 250, 0.18);
+    padding: 6px 18px;
+    border-radius: 20px;
+    border: 1px solid rgba(135, 206, 250, 0.4);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    transition: background 0.25s ease, box-shadow 0.25s ease;
+}
+
+.nav-links > li > a[href="#aspirasi"]:hover,
+.nav-links > li > a[href="index.html#aspirasi"]:hover {
+    background: rgba(135, 206, 250, 0.35);
+    color: #fff;
+    box-shadow: 0 0 12px rgba(135,206,250,0.25);
+}
