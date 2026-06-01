@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - HIMATEKINS ITS</title>
+    <link rel="icon" href="Assets/LOGO HIMATEKINS.png" type="image/png" sizes="any">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* CSS Khusus untuk Halaman Login agar presisi di tengah layar */
+        .login-wrapper {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .login-box {
+            background-color: var(--white);
+            width: 100%;
+            max-width: 450px;
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+            text-align: center;
+            border: 2px solid #000000; /* Konsisten dengan gaya Box Putih */
+        }
+
+        .login-logo {
+            width: 80px;
+            height: auto;
+            margin-bottom: 15px;
+        }
+
+        .login-box h2 {
+            color: #072B4D;
+            font-size: 2rem;
+            margin-bottom: 8px;
+        }
+
+        .login-box p {
+            color: #64748B;
+            font-size: 0.9rem;
+            margin-bottom: 30px;
+        }
+
+        .input-group {
+            text-align: left;
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #072B4D;
+            margin-bottom: 8px;
+        }
+
+        .input-field-wrapper {
+            position: relative;
+        }
+
+        .input-field-wrapper i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94A3B8;
+        }
+
+        .input-field-wrapper input {
+            width: 100%;
+            padding: 14px 15px 14px 45px;
+            border-radius: 12px;
+            border: 1.5px solid #CBD5E1;
+            background-color: #F8FAFC;
+            font-size: 0.95rem;
+            outline: none;
+            transition: var(--transition-smooth);
+        }
+
+        .input-field-wrapper input:focus {
+            border-color: #1B5A7D;
+            background-color: var(--white);
+            box-shadow: 0 0 0 4px rgba(27, 90, 125, 0.1);
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 14px;
+            border-radius: 12px;
+            border: none;
+            background-color: #072B4D;
+            color: var(--white);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            margin-top: 10px;
+        }
+
+        .login-btn:hover {
+            background-color: #1B5A7D;
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            color: #94A3B8;
+            font-size: 0.85rem;
+            margin: 25px 0;
+        }
+
+        .divider::before, .divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid #E2E8F0;
+        }
+
+        .divider:not(:empty)::before { margin-right: .5em; }
+        .divider:not(:empty)::after { margin-left: .5em; }
+
+        .google-btn {
+            width: 100%;
+            padding: 14px;
+            border-radius: 12px;
+            border: 1.5px solid #CBD5E1;
+            background-color: var(--white);
+            color: #334155;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: var(--transition-smooth);
+        }
+
+        .google-btn:hover {
+            background-color: #F8FAFC;
+            border-color: #94A3B8;
+        }
+
+        .google-btn img {
+            width: 20px;
+            height: 20px;
+        }
+
+        .back-to-home {
+            display: inline-block;
+            margin-top: 25px;
+            color: #1B5A7D;
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: var(--transition-smooth);
+        }
+
+        .back-to-home:hover {
+            color: #072B4D;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body class="bg-dark">
+
+    <div class="login-wrapper">
+        <div class="login-box">
+            <img src="Assets/LOGO HIMATEKINS.png" alt="Logo Himatekins" class="login-logo">
+            
+            <h2 class="font-amidone">W E L C O M E</h2>
+            <p class="font-montserrat">Portal Sistem Terintegrasi HIMATEKINS ITS</p>
+
+            <form id="login-form">
+                <div class="input-group">
+                    <label class="font-montserrat">EMAIL</label>
+                    <div class="input-field-wrapper">
+                        <i class="fas fa-envelope"></i>
+                        <input type="email" id="login-email" class="font-montserrat" placeholder="Masukkan email Anda" required>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label class="font-montserrat">PASSWORD</label>
+                    <div class="input-field-wrapper">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="login-password" class="font-montserrat" placeholder="Masukkan password" required>
+                    </div>
+                </div>
+
+                <button type="submit" class="login-btn font-montserrat">Masuk Aplikasi</button>
+            </form>
+
+            <div class="divider font-montserrat">ATAU</div>
+
+            <button class="google-btn font-montserrat" id="btn-google-login">
+                <img src="Logo myITS.png" alt="Google Logo" class="google-logo">
+                Masuk dengan Akun ITS
+            </button>
+
+            <a href="index.html" class="back-to-home font-montserrat">
+                <i class="fas fa-arrow-left"></i> Kembali ke Beranda
+            </a>
+        </div>
+    </div>
+
+    <!--
+        PENTING: tambahkan type="module" agar bisa pakai import/export ES Module.
+        Script ini HARUS diletakkan di paling bawah, sebelum </body>.
+    -->
+    <script type="module">
+
+        // ── 1. Import dari Firebase SDK & config kita sendiri ──────────────
+        import {
+            signInWithEmailAndPassword,
+            signInWithPopup,
+            GoogleAuthProvider,
+            onAuthStateChanged
+        } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+        import { auth } from "./firebase-config.js";
+
+        // ── 2. Cek jika user sudah login → langsung redirect ke admin ──────
+        //    (mencegah user yang sudah login membuka login.html lagi)
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                window.location.href = "admin.html";
+            }
+        });
+
+        // ── 3. Helper: tampilkan pesan error di halaman ────────────────────
+        function showError(message) {
+            // Cari elemen error, kalau belum ada buat dulu
+            let errEl = document.getElementById('login-error-msg');
+            if (!errEl) {
+                errEl = document.createElement('p');
+                errEl.id = 'login-error-msg';
+                errEl.style.cssText = `
+                    color: #e53e3e;
+                    font-size: 0.85rem;
+                    margin-top: 10px;
+                    text-align: center;
+                    font-family: 'Montserrat', sans-serif;
+                `;
+                // Sisipkan setelah tombol login
+                const loginBtn = document.querySelector('.login-btn');
+                loginBtn.parentNode.insertBefore(errEl, loginBtn.nextSibling);
+            }
+            errEl.textContent = message;
+        }
+
+        function clearError() {
+            const errEl = document.getElementById('login-error-msg');
+            if (errEl) errEl.textContent = '';
+        }
+
+        // ── 4. Login Email / Password ──────────────────────────────────────
+        document.getElementById('login-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            clearError();
+
+            const email    = document.getElementById('login-email').value.trim();
+            const password = document.getElementById('login-password').value;
+            const btn      = document.querySelector('.login-btn');
+
+            // Feedback loading di tombol
+            btn.textContent = 'Memproses...';
+            btn.disabled    = true;
+
+            try {
+                // Coba login ke Firebase
+                await signInWithEmailAndPassword(auth, email, password);
+                // Kalau berhasil, onAuthStateChanged di atas akan otomatis redirect
+            } catch (error) {
+                // Tampilkan pesan error yang ramah
+                const pesanError = {
+                    'auth/user-not-found':    'Email tidak terdaftar.',
+                    'auth/wrong-password':    'Password salah. Coba lagi.',
+                    'auth/invalid-email':     'Format email tidak valid.',
+                    'auth/too-many-requests': 'Terlalu banyak percobaan. Tunggu beberapa saat.',
+                    'auth/invalid-credential':'Email atau password salah.',
+                };
+                showError(pesanError[error.code] || 'Terjadi kesalahan. Coba lagi.');
+                btn.textContent = 'Masuk Aplikasi';
+                btn.disabled    = false;
+            }
+        });
+
+        // ── 5. Login Google ────────────────────────────────────────────────
+        document.getElementById('btn-google-login').addEventListener('click', async function() {
+            clearError();
+            const provider = new GoogleAuthProvider();
+
+            // Opsional: paksa tampilkan pilih akun setiap kali
+            provider.setCustomParameters({ prompt: 'select_account' });
+
+            try {
+                await signInWithPopup(auth, provider);
+                // Kalau berhasil, onAuthStateChanged otomatis redirect
+            } catch (error) {
+                if (error.code !== 'auth/popup-closed-by-user') {
+                    showError('Login Google gagal. Pastikan pop-up tidak diblokir browser.');
+                }
+            }
+        });
+
+    </script>
+</body>
+</html>
