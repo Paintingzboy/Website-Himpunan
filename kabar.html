@@ -20,6 +20,42 @@
         @media (max-width:800px) {
             .berita-foto-col img { height: 160px; }
         }
+
+        /* ── Override: Dokumentasi Kegiatan → tema putih ── */
+        .kabar-kegiatan-desc-light {
+            color: #555;
+            text-align: center;
+            margin-bottom: 25px;
+            font-size: 0.95rem;
+        }
+
+        /* Tombol Google Drive — gaya solid gelap agar kontras di bg putih */
+        #kegiatan .kegiatan-link-btn {
+            background: #072B4D;
+            border: none;
+            color: #FFFFFF;
+            backdrop-filter: none;
+            -webkit-backdrop-filter: none;
+        }
+        #kegiatan .kegiatan-link-btn:hover {
+            background: #0179C2;
+            box-shadow: 0 8px 25px rgba(1,121,194,0.25);
+        }
+
+        /* Grid foto — solid putih keabuan, bukan glass transparan */
+        #kegiatan .kegiatan-foto-placeholder {
+            background: #EFF4F8;
+            border: 1.5px solid #D1DCE8;
+            backdrop-filter: none;
+            -webkit-backdrop-filter: none;
+        }
+        #kegiatan .kegiatan-foto-placeholder:hover {
+            background: #DDE7F0;
+            transform: scale(1.02);
+        }
+
+        /* Hilangkan cutting-mat ::before dari section ini */
+        #kegiatan::before { display: none; }
     </style>
 </head>
 <body class="bg-dark">
@@ -144,9 +180,9 @@
         </section>
 
         <!-- SECTION: DOKUMENTASI KEGIATAN -->
-        <section class="kabar-container kabar-container-dark" id="kegiatan">
-            <h2 class="font-amidone kabar-section-title kabar-title-light">Dokumentasi Kegiatan</h2>
-            <p class="font-montserrat kabar-kegiatan-desc">Semua dokumentasi kegiatan himpunan bisa di akses melalui link berikut</p>
+        <section class="kabar-container" id="kegiatan">
+            <h2 class="font-amidone kabar-section-title">Dokumentasi Kegiatan</h2>
+            <p class="font-montserrat kabar-kegiatan-desc-light">Semua dokumentasi kegiatan himpunan bisa di akses melalui link berikut</p>
 
             <div class="kegiatan-link-wrap">
                 <a href="https://drive.google.com/drive/folders/" target="_blank" class="kegiatan-link-btn font-montserrat">
