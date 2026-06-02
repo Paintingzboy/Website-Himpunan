@@ -184,6 +184,7 @@
             <h2 class="font-amidone kabar-section-title">Dokumentasi Kegiatan</h2>
             <p class="font-montserrat kabar-kegiatan-desc-light">Semua dokumentasi kegiatan himpunan bisa di akses melalui link berikut</p>
 
+            <!-- SESUDAHNYA -->
             <div class="kegiatan-link-wrap">
                 <a href="https://drive.google.com/drive/u/0/folders/1teFj8iw2RwbGpXVHG-pn1TFOabUvB4a8" target="_blank" class="kegiatan-link-btn font-montserrat">
                     <i class="fab fa-google-drive"></i> Buka Google Drive
@@ -236,7 +237,7 @@
             try {
                 const driveMatch = u.match(/\/file\/d\/([a-zA-Z0-9_-]+)/) || u.match(/[?&]id=([a-zA-Z0-9_-]+)/);
                 if (u.includes('drive.google.com') && driveMatch && driveMatch[1]) {
-                    return 'https://drive.google.com/drive/u/0/folders/1teFj8iw2RwbGpXVHG-pn1TFOabUvB4a8' + driveMatch[1];
+                    return 'https://drive.google.com/uc?export=view&id=' + driveMatch[1];
                 }
             } catch (e) { /* ignore */ }
 
