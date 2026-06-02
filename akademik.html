@@ -8,6 +8,257 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
+
+    <!-- model-viewer untuk 3D GLB (hanya dimuat jika dibutuhkan) -->
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
+
+    <style>
+    /* ================================================================
+       LAB DETAIL PANEL — slide-in overlay (bukan modal, tapi full page)
+    ================================================================ */
+
+    /* Tombol Baca Selengkapnya di lab-card */
+    .lab-readmore-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 14px;
+        padding: 9px 20px;
+        background: #072B4D;
+        color: #FFFFFF;
+        border: none;
+        border-radius: 10px;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.83rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.25s ease;
+        text-decoration: none;
+    }
+    .lab-readmore-btn:hover {
+        background: #0179C2;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 18px rgba(1,121,194,0.35);
+    }
+    .lab-readmore-btn i { font-size: 0.8rem; transition: transform 0.2s; }
+    .lab-readmore-btn:hover i { transform: translateX(3px); }
+
+    /* ── Overlay backdrop ── */
+    .lab-detail-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(5, 18, 32, 0.7);
+        backdrop-filter: blur(5px);
+        -webkit-backdrop-filter: blur(5px);
+        z-index: 8500;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.35s ease;
+    }
+    .lab-detail-overlay.active {
+        opacity: 1;
+        pointer-events: all;
+    }
+
+    /* ── Panel utama (slide dari kanan) ── */
+    .lab-detail-panel {
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        width: min(820px, 100vw);
+        background: #FFFFFF;
+        z-index: 8600;
+        overflow-y: auto;
+        transform: translateX(100%);
+        transition: transform 0.4s cubic-bezier(0.32, 0.72, 0, 1);
+        box-shadow: -20px 0 60px rgba(0,0,0,0.3);
+    }
+    .lab-detail-panel.active {
+        transform: translateX(0);
+    }
+
+    /* ── Panel header strip ── */
+    .ldp-topbar {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        background: #FFFFFF;
+        border-bottom: 1.5px solid #E2E8F0;
+        padding: 16px 24px;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+    }
+    .ldp-back-btn {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: none;
+        border: none;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.88rem;
+        font-weight: 700;
+        color: #072B4D;
+        cursor: pointer;
+        padding: 8px 14px;
+        border-radius: 10px;
+        transition: background 0.2s ease, color 0.2s ease;
+    }
+    .ldp-back-btn:hover { background: #F1F5F9; color: #0179C2; }
+
+    /* ── Panel body ── */
+    .ldp-body { padding: 32px 36px 60px; }
+
+    /* Lab identity header */
+    .ldp-identity {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        margin-bottom: 36px;
+        padding-bottom: 24px;
+        border-bottom: 2px solid #E2E8F0;
+    }
+    .ldp-logo {
+        width: 70px;
+        height: 70px;
+        object-fit: contain;
+        flex-shrink: 0;
+    }
+    .ldp-name {
+        font-size: 1.55rem;
+        color: #072B4D;
+        line-height: 1.2;
+    }
+
+    /* ── Content grid (2 col pada desktop) ── */
+    .ldp-grid-2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+        margin-bottom: 28px;
+        align-items: start; /* ← tiap kolom ikut tingginya sendiri, teks tidak terpotong */
+    }
+
+    /* ── Section blocks ── */
+    .ldp-block {
+        background: #F8FAFC;
+        border-radius: 16px;
+        padding: 24px;
+        border: 1.5px solid #E2E8F0;
+    }
+    .ldp-block h3 {
+        font-family: 'AmidoneGrotesk', 'Montserrat', sans-serif;
+        color: #072B4D;
+        font-size: 1rem;
+        font-weight: 700;
+        text-align: center;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        margin-bottom: 14px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #0179C2;
+    }
+    .ldp-block p,
+    .ldp-block li {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.85rem;
+        color: #334155;
+        line-height: 1.75;
+    }
+    .ldp-block ol,
+    .ldp-block ul { padding-left: 18px; }
+    .ldp-block li { margin-bottom: 6px; }
+
+    /* Profil block full width */
+    .ldp-block.full { grid-column: 1 / -1; }
+
+    /* ── VIDEO PROFIL ── */
+    .ldp-video-wrap {
+        position: relative;
+        width: 100%;
+        aspect-ratio: 16 / 9;
+        border-radius: 14px;
+        overflow: hidden;
+        background: #E2E8F0;
+        margin-top: 8px;
+    }
+    .ldp-video-wrap iframe {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        border: none;
+    }
+    /* Placeholder saat video belum ada */
+    .ldp-video-placeholder {
+        width: 100%;
+        aspect-ratio: 16/9;
+        background: linear-gradient(135deg, #EFF6FF, #DBEAFE);
+        border-radius: 14px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        color: #93C5FD;
+        margin-top: 8px;
+        cursor: pointer;
+        border: 2px dashed #BFDBFE;
+        transition: all 0.2s ease;
+    }
+    .ldp-video-placeholder:hover { background: #DBEAFE; border-color: #0179C2; }
+    .ldp-video-placeholder i { font-size: 2.5rem; }
+    .ldp-video-placeholder span {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.82rem;
+        color: #0179C2;
+        font-weight: 600;
+        text-align: center;
+        padding: 0 16px;
+        word-break: break-all;
+    }
+
+    /* ── 3D MODEL VIEWER ── */
+    .ldp-3d-wrap {
+        width: 100%;
+        margin-top: 8px;
+        border-radius: 14px;
+        overflow: hidden;
+        border: 1.5px solid #E2E8F0;
+        background: #F0F6FA;
+    }
+    model-viewer {
+        width: 100%;
+        aspect-ratio: 4 / 3;   /* ← lebih tinggi dari 16/9 sebelumnya */
+        min-height: 380px;      /* ← minimum height agar tetap besar */
+        background: transparent;
+        --progress-bar-color: #0179C2;
+        --progress-bar-height: 3px;
+    }
+    .ldp-3d-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.72rem;
+        font-weight: 700;
+        background: #EFF6FF;
+        color: #0179C2;
+        border: 1px solid #BFDBFE;
+        border-radius: 20px;
+        padding: 4px 12px;
+        margin-top: 8px;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 680px) {
+        .ldp-body { padding: 20px 18px 50px; }
+        .ldp-grid-2 { grid-template-columns: 1fr; }
+        .ldp-name { font-size: 1.2rem; }
+        .lab-detail-panel { width: 100vw; }
+    }
+    </style>
 </head>
 <body class="bg-dark">
 
@@ -21,11 +272,9 @@
                     <span class="brand-subtitle">Himpunan Mahasiswa Teknik Instrumentasi</span>
                 </div>
             </div>
-
             <div class="hamburger" id="hamburger-toggle">
                 <i class="fas fa-bars"></i>
             </div>
-
             <ul class="nav-links" id="nav-menu">
                 <li><a href="index.html#home">Home</a></li>
                 <li class="dropdown">
@@ -96,6 +345,9 @@
                 <p class="lab-desc font-montserrat">
                     Instrumentasi Pengendalian (Instrumentation & Control Lab) adalah salah satu lab utama di departemen teknik instrumentasi dengan fokus bidang instrumentasi dan perkembangannya meliputi manufacturing, desain, hingga aplikasi serta mengembangkan system pengendalian (basic process control system dan advance control system) yang support dengan digital system, cyber physical dan distributed system.
                 </p>
+                <button class="lab-readmore-btn" onclick="bukaDetailLab('icl')">
+                    Baca Selengkapnya <i class="fas fa-arrow-right"></i>
+                </button>
             </div>
 
             <!-- Lab 2: Measurement -->
@@ -105,8 +357,11 @@
                     <h3 class="font-amidone">Measurement Laboratory</h3>
                 </div>
                 <p class="lab-desc font-montserrat">
-                    Laboratorium ini berfokus pada teknik pengukuran dan akuisisi data. Mahasiswa belajar menggunakan berbagai sensor dan alat ukur seperti oscilloscope, multimeter, serta sensor suhu, tekanan, dan aliran. Selain itu, dipelajari juga proses kalibrasi dan pengolahan data untuk memastikan hasil pengukuran yang akurat.
+                    Laboratorium ini berfokus pada teknik pengukuran dan akuisisi data. Mahasiswa belajar menggunakan berbagai sensor dan alat ukur seperti oscilloscope, multimeter, serta sensor suhu, tekanan, dan aliran. Selain itu, dipelajari juga proses kalibrasi dan pengolahan data untuk memastikan hasil pengukuran yang akurat dan andal.
                 </p>
+                <button class="lab-readmore-btn" onclick="bukaDetailLab('measurement')">
+                    Baca Selengkapnya <i class="fas fa-arrow-right"></i>
+                </button>
             </div>
 
             <!-- Lab 3: SIS -->
@@ -116,8 +371,11 @@
                     <h3 class="font-amidone">Safety Instrumented System Laboratory</h3>
                 </div>
                 <p class="lab-desc font-montserrat">
-                    Laboratorium ini mempelajari sistem keselamatan dalam industri, khususnya Safety Instrumented System (SIS). Fokusnya adalah bagaimana merancang sistem proteksi seperti emergency shutdown (ESD) untuk mencegah kecelakaan akibat kegagalan proses. Mahasiswa juga dikenalkan dengan analisis risiko dan standar keselamatan industri.
+                    Laboratorium ini mempelajari sistem keselamatan dalam industri, khususnya Safety Instrumented System (SIS). Fokusnya adalah bagaimana merancang sistem proteksi seperti emergency shutdown (ESD) untuk mencegah kecelakaan akibat kegagalan proses. Mahasiswa juga dikenalkan dengan analisis risiko dan standar keselamatan industri seperti IEC 61508 dan IEC 61511.
                 </p>
+                <button class="lab-readmore-btn" onclick="bukaDetailLab('sis')">
+                    Baca Selengkapnya <i class="fas fa-arrow-right"></i>
+                </button>
             </div>
 
             <!-- Lab 4: Electronic -->
@@ -127,8 +385,11 @@
                     <h3 class="font-amidone">Electronic Laboratory</h3>
                 </div>
                 <p class="lab-desc font-montserrat">
-                    Laboratorium ini berfokus pada dasar hingga lanjutan elektronika, baik analog maupun digital. Mahasiswa mempelajari perancangan rangkaian, penggunaan komponen elektronik, hingga pengembangan sistem berbasis mikrokontroler seperti Arduino atau embedded system. Praktikum meliputi perakitan, pengujian, dan analisis rangkaian elektronik.
+                    Laboratorium ini berfokus pada dasar hingga lanjutan elektronika, baik analog maupun digital. Mahasiswa mempelajari perancangan rangkaian, penggunaan komponen elektronik, hingga pengembangan sistem berbasis mikrokontroler seperti Arduino atau embedded system. Praktikum meliputi perakitan, pengujian, dan analisis rangkaian elektronik secara menyeluruh.
                 </p>
+                <button class="lab-readmore-btn" onclick="bukaDetailLab('electronic')">
+                    Baca Selengkapnya <i class="fas fa-arrow-right"></i>
+                </button>
             </div>
 
         </section>
@@ -137,133 +398,68 @@
         <section class="akademik-container" id="modul-template">
             <h2 class="font-amidone">Modul & Template Laporan</h2>
 
-            <!-- Sub-section: Modul Praktikum -->
             <div class="modul-subsection">
                 <h3 class="font-amidone modul-subtitle">Modul praktikum</h3>
-
                 <div class="search-bar-wrapper">
                     <input type="text" id="search-modul" class="search-input font-montserrat" placeholder="Cari Praktikum">
-                    <button class="search-btn font-montserrat" onclick="filterCards('modul')">Cari Lomba...</button>
+                    <button class="search-btn font-montserrat" onclick="filterCards('modul')">Cari...</button>
                 </div>
-
                 <div class="modul-grid" id="grid-modul">
-                    <div class="modul-card">
-                        <div class="modul-img-wrap">
-                            <img src="Assets/Modul ICL.png" alt="Modul ICL" class="modul-img">
-                        </div>
-                    </div>
-                    <div class="modul-card">
-                        <div class="modul-img-wrap">
-                            <img src="Assets/Modul Measurement.png" alt="Modul Measurement" class="modul-img">
-                        </div>
-                    </div>
-                    <div class="modul-card">
-                        <div class="modul-img-wrap">
-                            <img src="Assets/Modul SIS.png" alt="Modul SIS" class="modul-img">
-                        </div>
-                    </div>
-                    <div class="modul-card">
-                        <div class="modul-img-wrap">
-                            <img src="Assets/Modul Electronic.png" alt="Modul Electronic" class="modul-img">
-                        </div>
-                    </div>
+                    <div class="modul-card"><div class="modul-img-wrap"><img src="Assets/Modul ICL.png" alt="Modul ICL" class="modul-img"></div></div>
+                    <div class="modul-card"><div class="modul-img-wrap"><img src="Assets/Modul Measurement.png" alt="Modul Measurement" class="modul-img"></div></div>
+                    <div class="modul-card"><div class="modul-img-wrap"><img src="Assets/Modul SIS.png" alt="Modul SIS" class="modul-img"></div></div>
+                    <div class="modul-card"><div class="modul-img-wrap"><img src="Assets/Modul Electronic.png" alt="Modul Electronic" class="modul-img"></div></div>
                 </div>
             </div>
 
-            <!-- Sub-section: Template Laporan -->
             <div class="modul-subsection" style="margin-top: 50px;">
                 <h3 class="font-amidone modul-subtitle">Template laporan praktikum</h3>
-
                 <div class="modul-grid" id="grid-template">
                     <div class="modul-card template-card">
                         <p class="template-label font-montserrat">Template Laporan<br><strong>Instrumentation & Control Lab</strong></p>
-                        <div class="modul-img-wrap">
-                            <img src="Assets/Template ICL.png" alt="Template ICL" class="modul-img">
-                        </div>
-                        <a href="Assets/Template_Laporan_ICL.docx" download class="download-btn font-montserrat">
-                            <i class="fas fa-download"></i> Download
-                        </a>
+                        <div class="modul-img-wrap"><img src="Assets/Template ICL.png" alt="Template ICL" class="modul-img"></div>
+                        <a href="Assets/Template_Laporan_ICL.docx" download class="download-btn font-montserrat"><i class="fas fa-download"></i> Download</a>
                     </div>
                     <div class="modul-card template-card">
                         <p class="template-label font-montserrat">Template Laporan<br><strong>Measurement Laboratory</strong></p>
-                        <div class="modul-img-wrap">
-                            <img src="Assets/Template Measurement.png" alt="Template Measurement" class="modul-img">
-                        </div>
-                        <a href="Assets/Template_Laporan_Measurement.docx" download class="download-btn font-montserrat">
-                            <i class="fas fa-download"></i> Download
-                        </a>
+                        <div class="modul-img-wrap"><img src="Assets/Template Measurement.png" alt="Template Measurement" class="modul-img"></div>
+                        <a href="Assets/Template_Laporan_Measurement.docx" download class="download-btn font-montserrat"><i class="fas fa-download"></i> Download</a>
                     </div>
                     <div class="modul-card template-card">
                         <p class="template-label font-montserrat">Template Laporan<br><strong>Safety Instrumented System Lab</strong></p>
-                        <div class="modul-img-wrap">
-                            <img src="Assets/Template SIS.png" alt="Template SIS" class="modul-img">
-                        </div>
-                        <a href="Assets/Template_Laporan_SIS.docx" download class="download-btn font-montserrat">
-                            <i class="fas fa-download"></i> Download
-                        </a>
+                        <div class="modul-img-wrap"><img src="Assets/Template SIS.png" alt="Template SIS" class="modul-img"></div>
+                        <a href="Assets/Template_Laporan_SIS.docx" download class="download-btn font-montserrat"><i class="fas fa-download"></i> Download</a>
                     </div>
                     <div class="modul-card template-card">
                         <p class="template-label font-montserrat">Template Laporan<br><strong>Electronic Laboratory</strong></p>
-                        <div class="modul-img-wrap">
-                            <img src="Assets/Template Electronic.png" alt="Template Electronic" class="modul-img">
-                        </div>
-                        <a href="Assets/Template_Laporan_Electronic.docx" download class="download-btn font-montserrat">
-                            <i class="fas fa-download"></i> Download
-                        </a>
+                        <div class="modul-img-wrap"><img src="Assets/Template Electronic.png" alt="Template Electronic" class="modul-img"></div>
+                        <a href="Assets/Template_Laporan_Electronic.docx" download class="download-btn font-montserrat"><i class="fas fa-download"></i> Download</a>
                     </div>
                 </div>
             </div>
-
         </section>
 
         <!-- SECTION: SOFTWARE -->
         <section class="akademik-container software-section" id="software">
             <h2 class="font-amidone">Software</h2>
-            <p class="software-desc font-montserrat">Software-software yang digunakan dalam pembelajaran dan praktikum di Departemen Teknik Instrumentasi ITS.</p>
-
+            <p class="software-desc font-montserrat">Software yang digunakan dalam pembelajaran dan praktikum di Departemen Teknik Instrumentasi ITS.</p>
             <div class="software-grid-wrap">
                 <div class="software-logos-grid">
-                    <!-- Row 1 -->
-                    <div class="sw-item">
-                        <img src="Assets/Logo Ansys.png" alt="Ansys" class="sw-logo">
-                        <span class="sw-name font-montserrat">Ansys</span>
-                    </div>
-                    <div class="sw-item">
-                        <img src="Assets/Logo Arduino.png" alt="Arduino IDE" class="sw-logo">
-                        <span class="sw-name font-montserrat">Arduino IDE</span>
-                    </div>
-                    <div class="sw-item">
-                        <img src="Assets/Logo Autocad.png" alt="AutoCAD" class="sw-logo">
-                        <span class="sw-name font-montserrat">AutoCAD</span>
-                    </div>
-                    <div class="sw-item">
-                        <img src="Assets/Logo CX-One.png" alt="CX-One" class="sw-logo">
-                        <span class="sw-name font-montserrat">CX-One</span>
-                    </div>
-                    <!-- Row 2 -->
-                    <div class="sw-item">
-                        <img src="Assets/Logo Proteus.png" alt="Proteus" class="sw-logo">
-                        <span class="sw-name font-montserrat">Proteus</span>
-                    </div>
-                    <div class="sw-item">
-                        <img src="Assets/Logo MATLAB.png" alt="MATLAB" class="sw-logo">
-                        <span class="sw-name font-montserrat">MATLAB</span>
-                    </div>
-                    <div class="sw-item">
-                        <img src="Assets/Logo Visio.png" alt="MS Visio" class="sw-logo">
-                        <span class="sw-name font-montserrat">MS Visio</span>
-                    </div>
-                    <div class="sw-item">
-                        <img src="Assets/Logo Haiwell.png" alt="Haiwell" class="sw-logo">
-                        <span class="sw-name font-montserrat">Haiwell</span>
-                    </div>
+                    <div class="sw-item"><img src="Assets/Logo Ansys.png" alt="Ansys" class="sw-logo"><span class="sw-name font-montserrat">Ansys</span></div>
+                    <div class="sw-item"><img src="Assets/Logo Arduino.png" alt="Arduino IDE" class="sw-logo"><span class="sw-name font-montserrat">Arduino IDE</span></div>
+                    <div class="sw-item"><img src="Assets/Logo Autocad.png" alt="AutoCAD" class="sw-logo"><span class="sw-name font-montserrat">AutoCAD</span></div>
+                    <div class="sw-item"><img src="Assets/Logo CX-One.png" alt="CX-One" class="sw-logo"><span class="sw-name font-montserrat">CX-One</span></div>
+                    <div class="sw-item"><img src="Assets/Logo Proteus.png" alt="Proteus" class="sw-logo"><span class="sw-name font-montserrat">Proteus</span></div>
+                    <div class="sw-item"><img src="Assets/Logo MATLAB.png" alt="MATLAB" class="sw-logo"><span class="sw-name font-montserrat">MATLAB</span></div>
+                    <div class="sw-item"><img src="Assets/Logo Visio.png" alt="MS Visio" class="sw-logo"><span class="sw-name font-montserrat">MS Visio</span></div>
+                    <div class="sw-item"><img src="Assets/Logo Haiwell.png" alt="Haiwell" class="sw-logo"><span class="sw-name font-montserrat">Haiwell</span></div>
                 </div>
             </div>
-
             <div class="software-download-wrap">
                 <a href="https://drive.google.com/drive/folders/1VnnIg80HkIOMmUWV_C3wpHlJOLQijqye" target="_blank" class="sw-download-btn font-montserrat">
                     <i class="fas fa-download"></i> Download
                 </a>
+                <p class="sw-link-text font-montserrat">https://drive.google.com/drive/folders/1VnnIg80HkIOMmUWV_C3wpHlJOLQijqye</p>
             </div>
         </section>
 
@@ -279,25 +475,290 @@
         </div>
     </footer>
 
-    <script>
-        // Hamburger toggle
-        const hamburger = document.getElementById('hamburger-toggle');
-        const navMenu = document.getElementById('nav-menu');
-        hamburger.addEventListener('click', () => {
-            navMenu.classList.toggle('active');
-        });
+    <!-- ================================================================
+         LAB DETAIL PANEL — Overlay slide-in
+    ================================================================ -->
+    <div class="lab-detail-overlay" id="lab-overlay" onclick="tutupDetailLab()"></div>
 
-        // Search filter for modul
-        function filterCards(type) {
-            const query = document.getElementById('search-' + type).value.toLowerCase();
-            const cards = document.querySelectorAll('#grid-' + type + ' .modul-card');
-            cards.forEach(card => {
-                const alt = card.querySelector('img') ? card.querySelector('img').alt.toLowerCase() : '';
-                card.style.display = alt.includes(query) ? '' : 'none';
-            });
+    <aside class="lab-detail-panel" id="lab-panel" role="dialog" aria-modal="true">
+
+        <!-- Topbar sticky -->
+        <div class="ldp-topbar">
+            <button class="ldp-back-btn" onclick="tutupDetailLab()">
+                <i class="fas fa-arrow-left"></i> Kembali
+            </button>
+            <span id="ldp-topbar-nama" style="font-family:'Montserrat',sans-serif;font-size:0.82rem;font-weight:600;color:#64748B;"></span>
+        </div>
+
+        <!-- Konten panel (diisi JS) -->
+        <div class="ldp-body" id="ldp-body-content"></div>
+
+    </aside>
+
+    <!-- ================================================================
+         JAVASCRIPT
+    ================================================================ -->
+    <script>
+    // ── Hamburger ────────────────────────────────────────────────────────
+    document.getElementById('hamburger-toggle')
+        .addEventListener('click', () =>
+            document.getElementById('nav-menu').classList.toggle('active')
+        );
+
+    // ── Search filter modul ──────────────────────────────────────────────
+    function filterCards(type) {
+        const q = document.getElementById('search-' + type).value.toLowerCase();
+        document.querySelectorAll('#grid-' + type + ' .modul-card').forEach(card => {
+            const alt = card.querySelector('img')?.alt.toLowerCase() || '';
+            card.style.display = alt.includes(q) ? '' : 'none';
+        });
+    }
+    document.getElementById('search-modul').addEventListener('keyup', () => filterCards('modul'));
+
+    // ================================================================
+    // DATA LABORATORIUM
+    // ================================================================
+    const LAB_DATA = {
+
+        icl: {
+            logo:  'Assets/Logo ICL.png',
+            nama:  'Instrumentation and Control Laboratory',
+            short: 'IC Lab',
+            profil: `Instrumentasi Pengendalian (Instrumentation & Control Lab) adalah salah satu lab utama di departemen teknik instrumentasi dengan fokus bidang instrumentasi dan perkembangannya meliputi manufacturing, desain, hingga aplikasi serta mengembangkan system pengendalian (basic process control system dan advance control system) yang support dengan digital system, cyber physical dan distributed system.`,
+            visi:  `Menjadi Laboratorium unggulan penunjang Pendidikan Vokasi, dan riset rekayasa instrumentasi kontrol guna menyongsong dunia industri skala Nasional maupun Internasional.`,
+            misi: [
+                'Menyelenggarakan kegiatan layanan Laboratorium secara profesional untuk menunjang kegiatan Pendidikan Vokasi yang Unggul.',
+                'Menyelenggarakan penelitian dan kerjasama penelitian dalam bidang Instrumentasi Control dalam rangka meningkatkan nilai tambah dan daya saing produk nasional.',
+                'Menyelenggarakan jasa teknologi, pelatihan dan konsultasi bidang Instrumentasi Control secara profesional.',
+                'Menyelenggarakan tata pamong yang otonom, akuntabel dan transparan yang menjamin peningkatan kualitas secara berkelanjutan.'
+            ],
+            tujuan: [
+                'Menghasilkan hasil pengujian yang akurat dan terpercaya.',
+                'Menghasilkan karya ilmiah dan karya kreatif yang unggul di bidang Instrumentasi Control.',
+                'Menghasilkan layanan yang memenuhi kebutuhan industri dan masyarakat.',
+                'Menghasilkan kinerja laboratorium yang efektif, efisien dan akuntabel.'
+            ],
+            // Ganti ID video YouTube sesuai video asli ICL
+            youtubeId: 'evJufeYz0Xw',
+            // 3D model khusus ICL
+            model3d: 'Assets/IC_Lab.glb',
+        },
+
+        measurement: {
+            logo:  'Assets/Logo Measurement.png',
+            nama:  'Measurement Laboratory',
+            short: 'Measurement Lab',
+            profil: `Laboratorium ini berfokus pada teknik pengukuran dan akuisisi data. Mahasiswa belajar menggunakan berbagai sensor dan alat ukur seperti oscilloscope, multimeter, serta sensor suhu, tekanan, dan aliran. Selain itu, dipelajari juga proses kalibrasi dan pengolahan data untuk memastikan hasil pengukuran yang akurat dan andal.`,
+            visi:  `Menjadi laboratorium pengukuran terdepan yang menghasilkan tenaga ahli di bidang instrumentasi pengukuran dan berkontribusi pada perkembangan industri nasional.`,
+            misi: [
+                'Menyelenggarakan praktikum pengukuran dengan peralatan mutakhir dan standar internasional.',
+                'Mengembangkan kompetensi mahasiswa dalam teknik kalibrasi dan akuisisi data.',
+                'Mendukung penelitian pengukuran yang relevan dengan kebutuhan industri.',
+                'Membangun kerjasama dengan industri di bidang jasa pengukuran dan kalibrasi.'
+            ],
+            tujuan: [
+                'Menghasilkan mahasiswa yang kompeten dalam teknik pengukuran dan kalibrasi.',
+                'Menyediakan layanan pengujian dan kalibrasi bagi industri dan masyarakat.',
+                'Menghasilkan penelitian di bidang sensor dan akuisisi data.',
+                'Menjamin kualitas hasil pengukuran sesuai standar nasional dan internasional.'
+            ],
+            youtubeId: '',   // Isi dengan ID video YouTube Measurement Lab
+            model3d:   '',   // Tidak ada 3D model untuk lab ini
+        },
+
+        sis: {
+            logo:  'Assets/Logo SIS.png',
+            nama:  'Safety Instrumented System Laboratory',
+            short: 'SIS Lab',
+            profil: `Laboratorium ini mempelajari sistem keselamatan dalam industri, khususnya Safety Instrumented System (SIS). Fokusnya adalah bagaimana merancang sistem proteksi seperti emergency shutdown (ESD) untuk mencegah kecelakaan akibat kegagalan proses. Mahasiswa juga dikenalkan dengan analisis risiko dan standar keselamatan industri seperti IEC 61508 dan IEC 61511.`,
+            visi:  `Menjadi laboratorium keselamatan instrumentasi terkemuka yang mendukung terciptanya industri proses yang aman, handal, dan berkelanjutan.`,
+            misi: [
+                'Menyelenggarakan pendidikan dan pelatihan di bidang sistem keselamatan instrumentasi.',
+                'Mengembangkan penelitian di bidang analisis risiko dan integritas keselamatan.',
+                'Memberikan layanan konsultasi keselamatan industri kepada sektor energi dan manufaktur.',
+                'Menerapkan standar keselamatan internasional dalam setiap kegiatan laboratorium.'
+            ],
+            tujuan: [
+                'Menghasilkan lulusan yang kompeten merancang dan menganalisis SIS.',
+                'Mengembangkan metode analisis risiko berbasis standar IEC.',
+                'Menyediakan layanan pengujian sistem keselamatan untuk industri.',
+                'Meningkatkan kesadaran akan budaya keselamatan di lingkungan akademik dan industri.'
+            ],
+            youtubeId: '',   // Isi dengan ID video YouTube SIS Lab
+            model3d:   '',
+        },
+
+        electronic: {
+            logo:  'Assets/Logo Electronic.png',
+            nama:  'Electronic Laboratory',
+            short: 'Electronic Lab',
+            profil: `Laboratorium ini berfokus pada dasar hingga lanjutan elektronika, baik analog maupun digital. Mahasiswa mempelajari perancangan rangkaian, penggunaan komponen elektronik, hingga pengembangan sistem berbasis mikrokontroler seperti Arduino atau embedded system. Praktikum meliputi perakitan, pengujian, dan analisis rangkaian elektronik secara menyeluruh.`,
+            visi:  `Menjadi laboratorium elektronika unggulan yang menghasilkan inovator di bidang perancangan sistem elektronik terintegrasi untuk era industri 4.0.`,
+            misi: [
+                'Menyelenggarakan praktikum elektronika analog dan digital dengan standar industri.',
+                'Mengembangkan kompetensi mahasiswa dalam perancangan dan pengembangan sistem embedded.',
+                'Mendorong inovasi pengembangan prototipe elektronik yang aplikatif.',
+                'Menjalin kerjasama dengan industri elektronik dan teknologi informasi.'
+            ],
+            tujuan: [
+                'Menghasilkan mahasiswa yang mampu merancang sistem elektronik dari komponen dasar hingga sistem kompleks.',
+                'Menyediakan fasilitas perancangan PCB dan pengujian rangkaian elektronik.',
+                'Menghasilkan penelitian di bidang embedded system dan IoT.',
+                'Menjamin pemahaman mahasiswa terhadap standar keselamatan dalam praktikum elektronika.'
+            ],
+            youtubeId: '',   // Isi dengan ID video YouTube Electronic Lab
+            model3d:   '',
+        }
+    };
+
+    // ── Helper: konversi YouTube URL/ID → embed ID ───────────────────────
+    function getYoutubeEmbedId(input) {
+        if (!input) return '';
+        // Sudah berupa ID pendek (11 karakter)
+        if (/^[A-Za-z0-9_-]{11}$/.test(input)) return input;
+        // URL youtu.be/xxx
+        const short = input.match(/youtu\.be\/([A-Za-z0-9_-]{11})/);
+        if (short) return short[1];
+        // URL youtube.com/watch?v=xxx
+        const full = input.match(/[?&]v=([A-Za-z0-9_-]{11})/);
+        if (full) return full[1];
+        return '';
+    }
+
+    // ── Buka panel detail ────────────────────────────────────────────────
+    function bukaDetailLab(labKey) {
+        const data = LAB_DATA[labKey];
+        if (!data) return;
+
+        // Topbar nama
+        document.getElementById('ldp-topbar-nama').textContent = data.short;
+
+        // ── Susun konten HTML ──────────────────────────────────────────
+        const embedId = getYoutubeEmbedId(data.youtubeId);
+
+        // Video block
+        let videoHtml;
+        if (embedId) {
+            videoHtml = `
+            <div class="ldp-video-wrap">
+                <iframe
+                    src="https://www.youtube.com/embed/${embedId}?rel=0&modestbranding=1"
+                    title="Video Profil ${data.nama}"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen>
+                </iframe>
+            </div>`;
+        } else {
+            videoHtml = `
+            <div class="ldp-video-placeholder">
+                <i class="fab fa-youtube"></i>
+                <span>Video profil akan segera tersedia</span>
+            </div>`;
         }
 
-        document.getElementById('search-modul').addEventListener('keyup', () => filterCards('modul'));
+        // 3D Model block (hanya ICL)
+        let model3dHtml = '';
+        if (data.model3d) {
+            model3dHtml = `
+            <div class="ldp-block full" style="margin-top:4px;">
+                <h3>Denah 3D</h3>
+                <div class="ldp-3d-wrap">
+                    <model-viewer
+                        src="${data.model3d}"
+                        alt="3D Model ${data.nama}"
+                        camera-controls
+                        auto-rotate
+                        shadow-intensity="1"
+                        environment-image="neutral"
+                        loading="lazy">
+                    </model-viewer>
+                </div>
+                <div style="margin-top:10px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+                    <span class="ldp-3d-badge font-montserrat">
+                        <i class="fas fa-cube"></i> 3D Interaktif — Klik & Drag untuk Memutar
+                    </span>
+                    <span class="ldp-3d-badge font-montserrat" style="background:#F0FDF4;color:#16A34A;border-color:#BBF7D0;">
+                        <i class="fas fa-expand-arrows-alt"></i> Scroll untuk Zoom
+                    </span>
+                </div>
+            </div>`;
+        }
+
+        // Misi list
+        const misiList = (data.misi || []).map((m, i) => `<li>${m}</li>`).join('');
+
+        // Tujuan list
+        const tujuanList = (data.tujuan || []).map((t, i) => `<li>${t}</li>`).join('');
+
+        // ── Render HTML panel ──────────────────────────────────────────
+        document.getElementById('ldp-body-content').innerHTML = `
+
+            <!-- Identity -->
+            <div class="ldp-identity">
+                <img src="${data.logo}" alt="Logo ${data.nama}" class="ldp-logo"
+                     onerror="this.style.display='none'">
+                <h2 class="font-amidone ldp-name">${data.nama}</h2>
+            </div>
+
+            <!-- Row 1: Profil + Video -->
+            <div class="ldp-grid-2">
+                <div class="ldp-block">
+                    <h3>Profil</h3>
+                    <p>${data.profil}</p>
+                </div>
+                <div class="ldp-block">
+                    <h3>Video Profil</h3>
+                    ${videoHtml}
+                </div>
+            </div>
+
+            <!-- Row 2: Visi + Misi -->
+            <div class="ldp-grid-2">
+                <div class="ldp-block">
+                    <h3>Visi</h3>
+                    <p>${data.visi}</p>
+                </div>
+                <div class="ldp-block">
+                    <h3>Misi</h3>
+                    <ol>${misiList}</ol>
+                </div>
+            </div>
+
+            <!-- Row 3: Tujuan (full width) -->
+            <div class="ldp-block full">
+                <h3>Tujuan</h3>
+                <ol>${tujuanList}</ol>
+            </div>
+
+            <!-- 3D Model (hanya jika ada) -->
+            ${model3dHtml}
+        `;
+
+        // ── Tampilkan overlay + panel ──────────────────────────────────
+        document.getElementById('lab-overlay').classList.add('active');
+        document.getElementById('lab-panel').classList.add('active');
+        document.body.style.overflow = 'hidden';
+
+        // Scroll panel ke atas
+        document.getElementById('lab-panel').scrollTop = 0;
+    }
+
+    // ── Tutup panel detail ───────────────────────────────────────────────
+    function tutupDetailLab() {
+        document.getElementById('lab-overlay').classList.remove('active');
+        document.getElementById('lab-panel').classList.remove('active');
+        document.body.style.overflow = '';
+
+        // Bersihkan konten setelah animasi selesai (hindari 3D model tetap aktif)
+        setTimeout(() => {
+            document.getElementById('ldp-body-content').innerHTML = '';
+        }, 420);
+    }
+
+    // Tutup dengan tombol ESC
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') tutupDetailLab();
+    });
     </script>
 </body>
 </html>
