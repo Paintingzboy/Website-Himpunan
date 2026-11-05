@@ -139,7 +139,7 @@
         </div>
     </footer>
 
-</body>
+
 <script>
         const hamburger = document.getElementById('hamburger-toggle');
         const navMenu = document.getElementById('nav-menu');
@@ -235,92 +235,77 @@
 </style>
 
 <script type="module">
-    import {
-        collection, getDocs, query, orderBy, where
-    } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+    import { collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
     import { db } from "./firebase-config.js";
+    import { escapeHtml, safeUrl, urutkanTerbaru, waktuMs, pesanError } from "./data-utils.js";
 
+    const KATEGORI = ['beasiswa', 'lomba', 'magang'];
     // Simpan semua data agar bisa difilter tanpa re-fetch
     let allData = { beasiswa: [], lomba: [], magang: [] };
 
     function formatTanggal(ts) {
-        if (!ts) return '';
-        const d = ts.toDate ? ts.toDate() : new Date(ts);
-        return d.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+        const ms = waktuMs(ts);
+        if (!ms) return '';
+        return new Date(ms).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
     }
 
     function buatKartu(data) {
-        const kat = (data.kategori || '').toLowerCase();
+        const kat = (data.kategori || '').toString().trim().toLowerCase();
+        const link = safeUrl(data.link);
+        const tgl = formatTanggal(data.createdAt);
         return `
         <div class="info-card">
-            <span class="info-card-badge ${kat}">${kat.charAt(0).toUpperCase() + kat.slice(1)}</span>
-            <h3 class="font-amidone">${data.judul || '—'}</h3>
-            <p class="font-montserrat">${data.deskripsi || ''}</p>
-            ${data.link ? `<a href="${data.link}" target="_blank" class="info-card-link font-montserrat"><i class="fas fa-external-link-alt"></i> Lihat Selengkapnya</a>` : ''}
-            ${data.createdAt ? `<span class="info-card-tanggal font-montserrat"><i class="fas fa-calendar-alt"></i> ${formatTanggal(data.createdAt)}</span>` : ''}
+            <span class="info-card-badge ${escapeHtml(kat)}">${escapeHtml(kat.charAt(0).toUpperCase() + kat.slice(1))}</span>
+            <h3 class="font-amidone">${escapeHtml(data.judul || '—')}</h3>
+            <p class="font-montserrat">${escapeHtml(data.deskripsi)}</p>
+            ${link ? `<a href="${escapeHtml(link)}" target="_blank" rel="noopener noreferrer" class="info-card-link font-montserrat"><i class="fas fa-external-link-alt"></i> Lihat Selengkapnya</a>` : ''}
+            ${tgl ? `<span class="info-card-tanggal font-montserrat"><i class="fas fa-calendar-alt"></i> ${tgl}</span>` : ''}
         </div>`;
     }
 
     function renderGrid(gridId, items) {
         const grid = document.getElementById(gridId);
         if (!grid) return;
-        if (items.length === 0) {
-            grid.innerHTML = `<div class="info-grid-empty"><i class="fas fa-inbox"></i><p>Belum ada informasi tersedia.</p></div>`;
-        } else {
-            grid.innerHTML = items.map(buatKartu).join('');
-        }
+        grid.innerHTML = items.length
+            ? items.map(buatKartu).join('')
+            : `<div class="info-grid-empty"><i class="fas fa-inbox"></i><p>Belum ada informasi tersedia.</p></div>`;
     }
 
-    // Load semua data sekaligus
     async function muatSemuaLayanan() {
-        // Tampilkan loading state
-        ['grid-beasiswa', 'grid-lomba', 'grid-magang'].forEach(id => {
-            const el = document.getElementById(id);
+        KATEGORI.forEach(kat => {
+            const el = document.getElementById('grid-' + kat);
             if (el) el.innerHTML = '<div class="info-card-placeholder"></div><div class="info-card-placeholder"></div>';
         });
 
         try {
-            const q = query(collection(db, 'layanan'), orderBy('createdAt', 'desc'));
-            const snap = await getDocs(q);
+            const snap = await getDocs(collection(db, 'layanan'));
             allData = { beasiswa: [], lomba: [], magang: [] };
-
-            snap.forEach(doc => {
-                const data = { id: doc.id, ...doc.data() };
-                const kat = (data.kategori || '').toLowerCase();
-                if (allData[kat] !== undefined) allData[kat].push(data);
+            urutkanTerbaru(snap).forEach(data => {
+                const kat = (data.kategori || '').toString().trim().toLowerCase();
+                if (allData[kat]) allData[kat].push(data);
             });
-
-            renderGrid('grid-beasiswa', allData.beasiswa);
-            renderGrid('grid-lomba',    allData.lomba);
-            renderGrid('grid-magang',   allData.magang);
-
+            KATEGORI.forEach(kat => renderGrid('grid-' + kat, allData[kat]));
         } catch (e) {
-            ['grid-beasiswa', 'grid-lomba', 'grid-magang'].forEach(id => {
-                const el = document.getElementById(id);
-                if (el) el.innerHTML = `<div class="info-grid-empty"><i class="fas fa-exclamation-triangle"></i><p>Gagal memuat data.</p></div>`;
-            });
             console.error('Error memuat layanan:', e);
+            KATEGORI.forEach(kat => {
+                const el = document.getElementById('grid-' + kat);
+                if (el) el.innerHTML = `<div class="info-grid-empty"><i class="fas fa-exclamation-triangle"></i><p>Gagal memuat data.<br><small>${escapeHtml(pesanError(e))}</small></p></div>`;
+            });
         }
     }
 
     // Filter lokal berdasarkan kata kunci pencarian
-    window.filterLayanan = function(kategori) {
-        const inputId = 'search-' + kategori;
-        const gridId  = 'grid-' + kategori;
-        const keyword = (document.getElementById(inputId)?.value || '').toLowerCase();
+    window.filterLayanan = function (kategori) {
+        const keyword = (document.getElementById('search-' + kategori)?.value || '').toLowerCase();
         const filtered = allData[kategori].filter(d =>
             (d.judul || '').toLowerCase().includes(keyword) ||
             (d.deskripsi || '').toLowerCase().includes(keyword)
         );
-        renderGrid(gridId, filtered);
+        renderGrid('grid-' + kategori, filtered);
     };
 
-    // Real-time filter saat mengetik
-    ['beasiswa', 'lomba', 'magang'].forEach(kat => {
-        const input = document.getElementById('search-' + kat);
-        if (input) {
-            input.addEventListener('input', () => filterLayanan(kat));
-        }
+    KATEGORI.forEach(kat => {
+        document.getElementById('search-' + kat)?.addEventListener('input', () => filterLayanan(kat));
     });
 
     muatSemuaLayanan();
