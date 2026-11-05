@@ -2012,15 +2012,19 @@
     import { onAuthStateChanged, signOut }
         from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
     import {
-        collection, addDoc, getDocs, deleteDoc, doc, serverTimestamp, query, orderBy, updateDoc
+        collection, addDoc, getDocs, deleteDoc, doc, serverTimestamp, updateDoc
     } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
     import { getStorage, ref as sRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js";
-    import { auth, db } from "./firebase-config.js";
+    import { auth, db, isAdmin } from "./firebase-config.js";
+    import { escapeHtml, safeUrl, normalizeImageUrl, urutkanTerbaru, waktuMs, pesanError } from "./data-utils.js";
 
     // ── A. Cek login ─────────────────────────────────────────────
     onAuthStateChanged(auth, (user) => {
         if (!user) {
             window.location.href = "login.html";
+        } else if (!isAdmin(user)) {
+            alert('Akun ' + user.email + ' tidak memiliki akses admin.');
+            signOut(auth).finally(() => { window.location.href = "login.html"; });
         } else {
             const nameEl  = document.getElementById('sidebar-admin-name');
             const emailEl = document.getElementById('settings-email');
@@ -2030,6 +2034,10 @@
             // Muat aspirasi setelah login terverifikasi
             muatAspirasi();
             updateStatBerita();
+            // Data layanan baru dimuat SETELAH login terverifikasi.
+            // Sebelumnya dipanggil saat halaman dibuka (belum login) sehingga
+            // ditolak oleh rules yang mewajibkan login.
+            muatLayanan(kategoriAktif);
         }
     });
 
@@ -2071,17 +2079,17 @@
             <div class="asp-card-header">
                 <div class="asp-avatar"><i class="fas ${avatarIcon}"></i></div>
                 <div class="asp-sender">
-                    <span class="asp-name">${data.nama || 'Anonim'}</span>
-                    <span class="asp-email">${emailTeks}</span>
+                    <span class="asp-name">${escapeHtml(data.nama || 'Anonim')}</span>
+                    <span class="asp-email">${escapeHtml(emailTeks)}</span>
                 </div>
                 <span class="asp-timestamp">${formatWaktu(data.createdAt)}</span>
                 <div class="asp-status-dot ${isDone ? 'done' : ''}" id="dot-${id}"></div>
             </div>
-            <p class="asp-text font-montserrat">"${data.pesan || ''}"</p>
+            <p class="asp-text font-montserrat">"${escapeHtml(data.pesan)}"</p>
             <div class="asp-card-footer">
                 ${data.lampiran ? `
                 <span class="asp-file-chip font-montserrat">
-                    <i class="fas fa-paperclip"></i> ${data.lampiran}
+                    <i class="fas fa-paperclip"></i> ${escapeHtml(data.lampiran)}
                 </span>` : ''}
                 <div class="asp-action-group" ${!data.lampiran ? 'style="margin-left:0;"' : ''}>
                     <button class="asp-btn btn-done font-montserrat ${isDone ? 'is-done' : ''}"
@@ -2104,10 +2112,9 @@
             Memuat aspirasi...</p>`;
 
         try {
-            const q    = query(collection(db, 'aspirasi'), orderBy('createdAt', 'desc'));
-            const snap = await getDocs(q);
+            const daftar = urutkanTerbaru(await getDocs(collection(db, 'aspirasi')));
 
-            if (snap.empty) {
+            if (daftar.length === 0) {
                 aspList.innerHTML = `<div class="empty-state">
                     <i class="fas fa-inbox"></i>
                     <p>Belum ada aspirasi masuk.</p>
@@ -2118,9 +2125,9 @@
 
             let html   = '';
             let belum  = 0;
-            snap.forEach(d => {
-                if ((d.data().status || 'pending') === 'pending') belum++;
-                html += buatKartuAspirasi(d.id, d.data());
+            daftar.forEach(d => {
+                if ((d.status || 'pending') === 'pending') belum++;
+                html += buatKartuAspirasi(d.id, d);
             });
 
             aspList.innerHTML = html;
@@ -2129,7 +2136,7 @@
         } catch (err) {
             console.error('Gagal muat aspirasi:', err);
             aspList.innerHTML = `<p style="color:#E11D48;font-family:Montserrat,sans-serif;font-size:0.85rem;padding:20px 0;">
-                Gagal memuat data: ${err.message}</p>`;
+                Gagal memuat data: ${escapeHtml(pesanError(err))}</p>`;
         }
     }
 
@@ -2212,10 +2219,10 @@
         return `
         <div class="layanan-admin-card" id="card-${id}">
             <div class="lac-info">
-                <span class="lac-badge lac-badge--${kat}">${kat.toUpperCase()}</span>
-                <h4 class="lac-judul font-amidone">${data.judul || '—'}</h4>
-                <p class="lac-desc font-montserrat">${data.deskripsi || ''}</p>
-                ${data.link ? `<a href="${data.link}" target="_blank" class="lac-link font-montserrat"><i class="fas fa-external-link-alt"></i> ${data.link}</a>` : ''}
+                <span class="lac-badge lac-badge--${escapeHtml(kat)}">${escapeHtml(kat.toUpperCase())}</span>
+                <h4 class="lac-judul font-amidone">${escapeHtml(data.judul || '—')}</h4>
+                <p class="lac-desc font-montserrat">${escapeHtml(data.deskripsi)}</p>
+                ${safeUrl(data.link) ? `<a href="${escapeHtml(safeUrl(data.link))}" target="_blank" rel="noopener noreferrer" class="lac-link font-montserrat"><i class="fas fa-external-link-alt"></i> ${escapeHtml(data.link)}</a>` : ''}
             </div>
             <button class="lac-hapus" onclick="hapusLayanan('${id}')">
                 <i class="fas fa-trash"></i>
@@ -2237,14 +2244,10 @@
     async function muatLayanan(kategori) {
         listLayanan.innerHTML = '<p class="font-montserrat" style="color:#94A3B8;padding:20px 0">Memuat...</p>';
         try {
-            const q = query(collection(db, 'layanan'), orderBy('createdAt', 'desc'));
-            const snap = await getDocs(q);
-            const items = [];
-            snap.forEach(d => {
-                if ((d.data().kategori || '').toLowerCase() === kategori) {
-                    items.push(buatKartuLayanan(d.id, d.data()));
-                }
-            });
+            const snap = await getDocs(collection(db, 'layanan'));
+            const items = urutkanTerbaru(snap)
+                .filter(d => (d.kategori || '').toString().trim().toLowerCase() === kategori)
+                .map(d => buatKartuLayanan(d.id, d));
 
             // Update badge jumlah
             const badge = document.getElementById('badge-jumlah-layanan');
@@ -2254,7 +2257,7 @@
                 ? items.join('')
                 : '<p class="font-montserrat" style="color:#94A3B8;padding:20px 0">Belum ada data untuk kategori ini. Tambahkan di atas.</p>';
         } catch (e) {
-            listLayanan.innerHTML = '<p style="color:#E11D48;font-family:Montserrat,sans-serif;font-size:0.85rem;">Gagal memuat data: ' + e.message + '</p>';
+            listLayanan.innerHTML = '<p style="color:#E11D48;font-family:Montserrat,sans-serif;font-size:0.85rem;">Gagal memuat data: ' + escapeHtml(pesanError(e)) + '</p>';
         }
         updateStatLayanan();
     }
@@ -2314,9 +2317,6 @@
         });
     });
 
-    // ── Init ──────────────────────────────────────────────────────
-    muatLayanan(kategoriAktif);
-    updateStatLayanan();
 
     // ================================================================
     // 7. FIRESTORE — Kelola Berita (Kabar Himpunan)
@@ -2334,21 +2334,22 @@
     }
 
     function formatTgl(ts) {
-        if (!ts) return '';
-        const d = ts.toDate ? ts.toDate() : new Date(ts);
-        return d.toLocaleDateString('id-ID', { day:'numeric', month:'long', year:'numeric' });
+        const ms = waktuMs(ts);
+        if (!ms) return '';
+        return new Date(ms).toLocaleDateString('id-ID', { day:'numeric', month:'long', year:'numeric' });
     }
 
     function buatKartuBerita(id, data) {
-        const fotoHtml = data.urlFoto
-            ? `<div class="bac-foto"><img src="${data.urlFoto}" alt="foto" onerror="this.parentElement.innerHTML='<i class=\\'fas fa-image\\'></i>'"></div>`
+        const foto = normalizeImageUrl(data.urlFoto);
+        const fotoHtml = foto
+            ? `<div class="bac-foto"><img src="${escapeHtml(foto)}" alt="foto" onerror="this.parentElement.innerHTML='<i class=\\'fas fa-image\\'></i>'"></div>`
             : `<div class="bac-foto"><i class="fas fa-image"></i></div>`;
         return `
         <div class="berita-admin-card" id="bcard-${id}">
             ${fotoHtml}
             <div class="bac-info">
-                <h4 class="bac-judul font-amidone">${data.judul || '—'}</h4>
-                <p class="bac-kutipan font-montserrat">${data.kutipan || ''}</p>
+                <h4 class="bac-judul font-amidone">${escapeHtml(data.judul || '—')}</h4>
+                <p class="bac-kutipan font-montserrat">${escapeHtml(data.kutipan)}</p>
                 <span class="bac-tanggal font-montserrat"><i class="fas fa-calendar-alt"></i> ${formatTgl(data.createdAt)}</span>
             </div>
             <button class="bac-hapus" onclick="hapusBerita('${id}')">
@@ -2362,17 +2363,12 @@
         if (!listEl) return;
         listEl.innerHTML = '<p class="font-montserrat" style="color:#94A3B8;padding:20px 0">Memuat...</p>';
         try {
-            const q = query(collection(db, 'berita'), orderBy('createdAt', 'desc'));
-            const snap = await getDocs(q);
-            if (snap.empty) {
-                listEl.innerHTML = '<p class="font-montserrat" style="color:#94A3B8;padding:20px 0">Belum ada berita. Tambahkan di atas.</p>';
-            } else {
-                let html = '';
-                snap.forEach(d => { html += buatKartuBerita(d.id, d.data()); });
-                listEl.innerHTML = html;
-            }
+            const daftar = urutkanTerbaru(await getDocs(collection(db, 'berita')));
+            listEl.innerHTML = daftar.length
+                ? daftar.map(d => buatKartuBerita(d.id, d)).join('')
+                : '<p class="font-montserrat" style="color:#94A3B8;padding:20px 0">Belum ada berita. Tambahkan di atas.</p>';
         } catch(e) {
-            listEl.innerHTML = `<p style="color:#E11D48;font-family:Montserrat,sans-serif;font-size:0.85rem;">Gagal memuat: ${e.message}</p>`;
+            listEl.innerHTML = `<p style="color:#E11D48;font-family:Montserrat,sans-serif;font-size:0.85rem;">Gagal memuat: ${escapeHtml(pesanError(e))}</p>`;
         }
         updateStatBerita();
     }
@@ -2408,8 +2404,12 @@
                     const storage = getStorage();
                     const path = `berita/${Date.now()}_${file.name.replace(/[^a-zA-Z0-9_.-]/g,'_')}`;
                     const ref = sRef(storage, path);
-                    await uploadBytes(ref, file);
-                    finalFotoUrl = await getDownloadURL(ref);
+                    try {
+                        await uploadBytes(ref, file);
+                        finalFotoUrl = await getDownloadURL(ref);
+                    } catch (upErr) {
+                        throw new Error('Upload foto ke Firebase Storage gagal (' + (upErr.code || upErr.message) + '). Storage butuh paket Blaze; sebagai gantinya isi kolom URL foto dengan link Google Drive yang dibagikan "Siapa saja yang memiliki link".');
+                    }
                 }
 
                 await addDoc(collection(db, 'berita'), {
@@ -2436,8 +2436,6 @@
         muatBerita();
     });
 
-    // Init stat
-    updateStatBerita();
 
 </script>
 </body>
