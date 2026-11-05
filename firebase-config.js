@@ -26,7 +26,7 @@ export const db = getFirestore(app);
 //    (termasuk akun Google siapa pun) bisa membuka admin.html.
 //    Samakan juga dengan daftar di firestore.rules.
 export const ADMIN_EMAILS = [
-    // "admin@himatekins.com",
+    admin@himatekins.com,
 ];
 
 export function isAdmin(user) {
