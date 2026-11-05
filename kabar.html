@@ -222,123 +222,102 @@
 
     <!-- Script: muat konten Berita dari Firestore -->
     <script type="module">
-        import { collection, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+        import { collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
         import { db } from "./firebase-config.js";
+        import { escapeHtml, normalizeImageUrl, urutkanTerbaru, pesanError } from "./data-utils.js";
 
-        function escapeHtml(str){
-            return String(str || '').replace(/[&<>'\"]/g, s=>({ '&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#39;'}[s]));
+        const FOTO_KOSONG = '<div class="berita-foto-placeholder"><span class="font-montserrat">Tidak ada foto</span></div>';
+
+        // Jika gambar gagal dimuat, ganti dengan placeholder (bukan teks link yang merusak layout)
+        function pasangFallbackGambar(root) {
+            root.querySelectorAll('img[data-fallback]').forEach(img => {
+                img.addEventListener('error', () => {
+                    const col = img.parentElement;
+                    if (col) col.innerHTML = FOTO_KOSONG;
+                }, { once: true });
+            });
         }
 
-        function normalizeImageUrl(url){
-            if (!url || typeof url !== 'string') return url;
-            const u = url.trim();
-            if (!u) return u;
-
-            try {
-                const driveMatch = u.match(/\/file\/d\/([a-zA-Z0-9_-]+)/) || u.match(/[?&]id=([a-zA-Z0-9_-]+)/);
-                if (u.includes('drive.google.com') && driveMatch && driveMatch[1]) {
-                    return 'https://drive.google.com/uc?export=view&id=' + driveMatch[1];
-                }
-            } catch (e) { /* ignore */ }
-
-            try {
-                const imgurMatch = u.match(/^https?:\/\/(?:www\.)?imgur\.com\/(?:gallery\/|a\/)?([a-zA-Z0-9]+)(?:\.(png|jpe?g|gif|gifv|webp))?/i);
-                if (imgurMatch && imgurMatch[1]) {
-                    const ext = imgurMatch[2] ? imgurMatch[2].toLowerCase().replace('gifv', 'gif') : 'jpg';
-                    return `https://i.imgur.com/${imgurMatch[1]}.${ext}`;
-                }
-            } catch (e) { /* ignore */ }
-
-            return u;
-        }
-
-        function showBeritaModal(data){
-            let modal = document.getElementById('berita-modal');
-            if (modal) modal.remove();
-            modal = document.createElement('div');
+        function showBeritaModal(data) {
+            document.getElementById('berita-modal')?.remove();
+            const foto = normalizeImageUrl(data.urlFoto);
+            const modal = document.createElement('div');
             modal.id = 'berita-modal';
-            modal.style = 'position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.6);z-index:2000;padding:20px;';
+            modal.style.cssText = 'position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.6);z-index:2000;padding:20px;';
             modal.innerHTML = `
-                <div style="max-width:900px;width:100%;background:#fff;border-radius:12px;padding:20px;overflow:auto;max-height:90vh;">
-                    <button id="close-berita-modal" style="position:absolute;right:20px;top:18px;border:none;background:transparent;font-size:1.2rem;cursor:pointer;color:#333"><i class="fas fa-times"></i></button>
-                    <h2 style="margin-top:0;">${escapeHtml(data.judul)}</h2>
-                    ${data.urlFoto ? `<img src="${normalizeImageUrl(data.urlFoto)}" style="width:100%;max-height:420px;object-fit:cover;border-radius:8px;margin-bottom:12px;" onerror="this.outerHTML = '<a href=\'${encodeURI(normalizeImageUrl(data.urlFoto))}\' target=\'_blank\' rel=\'noopener noreferrer\'>Buka Gambar</a>'">` : ''}
-                    <p style="white-space:pre-wrap;color:#222;">${escapeHtml(data.konten)}</p>
+                <div style="position:relative;max-width:900px;width:100%;background:#fff;border-radius:12px;padding:20px;overflow:auto;max-height:90vh;">
+                    <button id="close-berita-modal" aria-label="Tutup" style="position:absolute;right:16px;top:14px;border:none;background:transparent;font-size:1.2rem;cursor:pointer;color:#333"><i class="fas fa-times"></i></button>
+                    <h2 style="margin-top:0;padding-right:30px;">${escapeHtml(data.judul)}</h2>
+                    ${foto ? `<div><img src="${escapeHtml(foto)}" data-fallback alt="" style="width:100%;max-height:420px;object-fit:cover;border-radius:8px;margin-bottom:12px;"></div>` : ''}
+                    <p style="white-space:pre-wrap;color:#222;">${escapeHtml(data.konten || data.kutipan)}</p>
                 </div>`;
             document.body.appendChild(modal);
-            modal.querySelector('#close-berita-modal').addEventListener('click', ()=> modal.remove());
-            modal.addEventListener('click', (e)=> { if (e.target===modal) modal.remove(); });
+            pasangFallbackGambar(modal);
+            modal.querySelector('#close-berita-modal').addEventListener('click', () => modal.remove());
+            modal.addEventListener('click', (e) => { if (e.target === modal) modal.remove(); });
         }
 
-        async function muatBeritaPublik(){
+        function tampilPesan(section, html) {
+            section.querySelector('.berita-status')?.remove();
+            const el = document.createElement('div');
+            el.className = 'berita-status';
+            el.innerHTML = html;
+            section.appendChild(el);
+            return el;
+        }
+
+        async function muatBeritaPublik() {
             const section = document.getElementById('berita');
             if (!section) return;
 
-            // Tampilkan loading
-            const loading = document.createElement('p');
-            loading.className = 'font-montserrat';
-            loading.style.color = '#94A3B8';
-            loading.style.textAlign = 'center';
-            loading.style.padding = '30px 0';
-            loading.innerHTML = '<i class="fas fa-spinner fa-spin" style="font-size:1.5rem;display:block;margin-bottom:10px;"></i> Memuat berita...';
-            section.appendChild(loading);
+            // Hapus contoh berita statis supaya tidak bercampur dengan data asli
+            section.querySelectorAll('.berita-item').forEach(el => el.remove());
+            tampilPesan(section, '<p class="font-montserrat" style="color:#94A3B8;text-align:center;padding:30px 0;"><i class="fas fa-spinner fa-spin" style="font-size:1.5rem;display:block;margin-bottom:10px;"></i> Memuat berita...</p>');
 
             try {
-                const q = query(collection(db, 'berita'), orderBy('createdAt', 'desc'));
-                const snap = await getDocs(q);
-                if (snap.empty) {
-                    section.innerHTML = `<div class="empty-state"><i class="fas fa-newspaper"></i><p>Belum ada berita.</p></div>`;
+                const snap = await getDocs(collection(db, 'berita'));
+                const daftar = urutkanTerbaru(snap);
+
+                if (daftar.length === 0) {
+                    tampilPesan(section, '<div class="empty-state"><i class="fas fa-newspaper"></i><p>Belum ada berita.</p></div>');
                     return;
                 }
 
-                // Hapus placeholder berita statis bila ada
-                section.querySelectorAll('.berita-item').forEach(el => el.remove());
-
-                let html = '';
-                let i = 0;
-                snap.forEach(d => {
-                    const data = d.data();
+                const html = daftar.map((data, i) => {
                     const layout = (i % 2 === 0) ? 'berita-text-left' : 'berita-foto-left';
-                    const fotoUrl = data.urlFoto ? normalizeImageUrl(data.urlFoto) : '';
-                    const fotoHtml = fotoUrl
-                        ? `<div class="berita-foto-col"><img src="${fotoUrl}" alt="${escapeHtml(data.judul)}" onerror="this.outerHTML = '<a href=\'${encodeURI(fotoUrl)}\' target=\'_blank\' rel=\'noopener noreferrer\'>Buka Gambar</a>'"></div>`
-                        : `<div class="berita-foto-col"><div class="berita-foto-placeholder"><span class="font-montserrat">Tidak ada foto</span></div></div>`;
-
-                    html += `
-                        <div class="berita-item ${layout}" data-id="${d.id}">
+                    const foto = normalizeImageUrl(data.urlFoto);
+                    const fotoHtml = foto
+                        ? `<div class="berita-foto-col"><img src="${escapeHtml(foto)}" data-fallback alt="${escapeHtml(data.judul)}" loading="lazy"></div>`
+                        : `<div class="berita-foto-col">${FOTO_KOSONG}</div>`;
+                    return `
+                        <div class="berita-item ${layout}">
                             <div class="berita-text-col">
-                                <h3 class="font-amidone berita-judul">${escapeHtml(data.judul)}</h3>
+                                <h3 class="font-amidone berita-judul">${escapeHtml(data.judul || 'Tanpa judul')}</h3>
                                 <p class="font-montserrat berita-kutipan">${escapeHtml(data.kutipan)}</p>
-                                <a href="#" class="berita-readmore font-montserrat" data-id="${d.id}">Baca Selengkapnya <i class="fas fa-arrow-right"></i></a>
+                                <a href="#" class="berita-readmore font-montserrat" data-id="${escapeHtml(data.id)}">Baca Selengkapnya <i class="fas fa-arrow-right"></i></a>
                             </div>
                             ${fotoHtml}
                         </div>`;
-                    i++;
-                });
+                }).join('');
 
-                loading.remove();
+                section.querySelector('.berita-status')?.remove();
                 section.insertAdjacentHTML('beforeend', html);
+                pasangFallbackGambar(section);
 
-                // Pasang event handler untuk tombol baca
                 section.querySelectorAll('.berita-readmore').forEach(btn => {
-                    btn.addEventListener('click', async (ev) => {
+                    btn.addEventListener('click', (ev) => {
                         ev.preventDefault();
-                        const id = btn.dataset.id;
-                        // Ambil dokumen spesifik
-                        const docs = snap.docs.filter(x => x.id === id);
-                        const doc = docs.length ? docs[0] : null;
-                        if (doc) showBeritaModal(doc.data());
-                        else alert('Berita tidak ditemukan.');
+                        const data = daftar.find(x => x.id === btn.dataset.id);
+                        if (data) showBeritaModal(data);
                     });
                 });
-
-            } catch (err){
+            } catch (err) {
                 console.error('Gagal muat berita publik:', err);
-                section.innerHTML = `<p style="color:#E11D48;font-family:Montserrat,sans-serif;font-size:0.85rem;padding:20px 0;">Gagal memuat berita: ${escapeHtml(err.message)}</p>`;
+                tampilPesan(section, `<p style="color:#E11D48;font-family:Montserrat,sans-serif;font-size:0.85rem;padding:20px 0;">Gagal memuat berita: ${escapeHtml(pesanError(err))}</p>`);
             }
         }
 
-        document.addEventListener('DOMContentLoaded', muatBeritaPublik);
+        muatBeritaPublik();
     </script>
 </body>
 </html>
