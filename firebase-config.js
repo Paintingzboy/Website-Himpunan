@@ -20,3 +20,17 @@ export const auth = getAuth(app);
 
 // 2. Tambahkan export db agar bisa dipakai di file admin.html & layanan.html
 export const db = getFirestore(app);
+
+// 3. Daftar email yang boleh masuk dashboard admin.
+//    WAJIB diisi! Selama daftar ini kosong, semua akun yang berhasil login
+//    (termasuk akun Google siapa pun) bisa membuka admin.html.
+//    Samakan juga dengan daftar di firestore.rules.
+export const ADMIN_EMAILS = [
+    // "admin@himatekins.com",
+];
+
+export function isAdmin(user) {
+    if (!user) return false;
+    if (ADMIN_EMAILS.length === 0) return true;
+    return ADMIN_EMAILS.map(e => e.toLowerCase()).includes((user.email || '').toLowerCase());
+}
